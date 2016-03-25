@@ -1,5 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Configuration;
 using System.IO;
+using System.Linq;
 using System.Security.Cryptography;
 
 namespace dotnet.common.files
@@ -42,7 +45,40 @@ namespace dotnet.common.files
             }
         }
 
-       public static bool MatchFileContent(this string filePath, string otherFilePath)
+        public static IList<string> GetFilesInFolderWithExtension(this string path, string fileExtension,
+            bool includeSubDirectories = false, TimeSpan? onlyFilesOlderThan = null)
+        {
+            if (!fileExtension.StartsWith("."))
+                fileExtension = "." + fileExtension;
+
+            return path.GetFilesInFolderAsPaths(string.Format("*{0}", fileExtension), includeSubDirectories,
+                onlyFilesOlderThan);
+        }
+
+        public static IList<string> GetFilesInFolderAsPaths(this string path,string pattern="*.*",bool includeSubDirectories=false,TimeSpan? onlyFilesOlderThan=null)
+        {
+            if(!Directory.Exists(path))
+                return new List<string>();
+
+            return
+                path.GetFilesInFolder(pattern, includeSubDirectories, onlyFilesOlderThan)
+                    .Select(x => x.FullName)
+                    .ToList();
+        }
+
+        public static IList<FileInfo> GetFilesInFolder(this string path, string pattern = "*.*", bool includeSubDirectories = false, TimeSpan? onlyFilesOlderThan = null)
+        {
+            if (!Directory.Exists(path))
+                return new List<FileInfo>();
+
+            return Directory.GetFiles(path, pattern,
+                includeSubDirectories ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly)
+                .Select(f => new FileInfo(f))
+                .Where(f => onlyFilesOlderThan == null || (DateTime.Now - f.CreationTime) > onlyFilesOlderThan.Value)
+                .ToList();
+        }
+
+        public static bool MatchFileContent(this string filePath, string otherFilePath)
         {
             if (string.IsNullOrWhiteSpace(filePath))
                 throw new ArgumentNullException("filePath is null or empty");
@@ -63,4 +99,4 @@ namespace dotnet.common.files
             }
         }
     }
-}
+    }
