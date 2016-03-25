@@ -78,5 +78,39 @@ namespace dotnet.common.strings
         {
             return Encoding.UTF8.GetString(Convert.FromBase64String(value));
         }
+
+        /// <summary>
+        /// Converts a base64 string into ordinary string using UTF-8 replace characters not valid in url based on jwt spec
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public static string Base64UrlEncode(this string value)
+        {
+            var output = value.ToBase64String();
+            output = output.Split('=')[0]; // Remove any trailing '='s
+            output = output.Replace('+', '-'); // 62nd char of encoding
+            output = output.Replace('/', '_'); // 63rd char of encoding
+            return output;
+        }
+
+        /// <summary>
+        /// Converts a base64  string that is urlencoded into ordinary string using UTF-8 
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public static string Base64UrlDecode(this string input)
+        {
+            var output = input;
+            output = output.Replace('-', '+'); // 62nd char of encoding
+            output = output.Replace('_', '/'); // 63rd char of encoding
+            switch (output.Length % 4) // Pad with trailing '='s
+            {
+                case 0: break; // No pad chars in this case
+                case 2: output += "=="; break; // Two pad chars
+                case 3: output += "="; break;  // One pad char
+                default: throw new Exception("Illegal base64url string!");
+            }
+            return output.FromBase64String();
+        }
     }
 }

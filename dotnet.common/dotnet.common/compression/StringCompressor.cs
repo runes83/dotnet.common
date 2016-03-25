@@ -14,6 +14,8 @@ namespace dotnet.common.compression
         /// <returns></returns>
         public static string CompressString(this string text)
         {
+            if (string.IsNullOrWhiteSpace(text))
+                return text;
             using (var memoryStream = new MemoryStream())
             {
                 byte[] buffer = Encoding.UTF8.GetBytes(text);
@@ -41,6 +43,8 @@ namespace dotnet.common.compression
         /// <returns></returns>
         public static string DecompressString(this string compressedText)
         {
+            if (string.IsNullOrWhiteSpace(compressedText))
+                return compressedText;
             byte[] gZipBuffer = Convert.FromBase64String(compressedText);
             using (var memoryStream = new MemoryStream())
             {

@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{88D31F89-FE15-4597-9DB1-5172EC5C090C}</ProjectGuid>
+    <ProjectGuid>{56F8989A-F351-4655-8756-0EEF2BFAED6C}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>dotnet.common</RootNamespace>
-    <AssemblyName>dotnet.common</AssemblyName>
+    <RootNamespace>dotnet.common.test</RootNamespace>
+    <AssemblyName>dotnet.common.test</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -30,31 +30,39 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="nunit.framework, Version=2.6.4.14350, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL">
+      <HintPath>..\packages\NUnit.2.6.4\lib\nunit.framework.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="compression\StringCompressor.cs" />
-    <Compile Include="date\DateExtensions.cs" />
-    <Compile Include="enums\EnumExtensions.cs" />
-    <Compile Include="files\FilesExtensions.cs" />
-    <Compile Include="files\MimeAssistant.cs" />
-    <Compile Include="hash\HashExtensions.cs" />
-    <Compile Include="hash\HmacExtensions.cs" />
-    <Compile Include="MiscExtensions.cs" />
-    <Compile Include="numbers\NumberExtensions.cs" />
+    <Compile Include="Class1.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="encryption\CertificateEncryptionService.cs" />
-    <Compile Include="encryption\EncryptionService.cs" />
-    <Compile Include="encryption\Encryptor.cs" />
-    <Compile Include="encryption\IEncryption.cs" />
-    <Compile Include="security\RandomStringGenerator.cs" />
-    <Compile Include="security\SecureGuid.cs" />
-    <Compile Include="serialization\SerializationExtensions.cs" />
-    <Compile Include="strings\StringExtensions.cs" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\dotnet.common\dotnet.common.csproj">
+      <Project>{88d31f89-fe15-4597-9db1-5172ec5c090c}</Project>
+      <Name>dotnet.common</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+    <Content Include="TestFiles\TCA.p12">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="TestFiles\documenttosign.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

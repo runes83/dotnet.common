@@ -1,0 +1,1 @@
+Test sign BankID mobile from Signere.no AS
