@@ -39,18 +39,20 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="compression\StringCompressor.cs" />
     <Compile Include="date\DateExtensions.cs" />
     <Compile Include="enums\EnumExtensions.cs" />
     <Compile Include="files\FilesExtensions.cs" />
+    <Compile Include="files\MimeAssistant.cs" />
     <Compile Include="hash\HashExtensions.cs" />
     <Compile Include="hash\HmacExtensions.cs" />
     <Compile Include="MiscExtensions.cs" />
     <Compile Include="numbers\NumberExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="security\SecureGuid.cs" />
     <Compile Include="strings\StringExtensions.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="compression\" />
     <Folder Include="encryption\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

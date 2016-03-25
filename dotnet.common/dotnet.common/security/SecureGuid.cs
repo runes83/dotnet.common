@@ -5,7 +5,7 @@ namespace dotnet.common.security
 {
     /// <summary>
     /// Create a secure guid that is cryptograpically strong
-    /// This is code is created by Andre KLingsheim see http://www.dotnetnoob.com/2012/07/generating-secure-guids.html
+    /// This is code is created by Andre Klingsheim see http://www.dotnetnoob.com/2012/07/generating-secure-guids.html
     /// </summary>
     public class SecureGuid
     {
