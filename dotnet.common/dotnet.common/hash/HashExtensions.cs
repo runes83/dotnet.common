@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 
@@ -11,7 +12,6 @@ namespace dotnet.common.hash
         
         public static string ToMd5(this string value, HashFormat hashFormat, Encoding encoding = null)
         {
-            
             using (var sha = new MD5CryptoServiceProvider())
             {
                 return ToShaHash(value, hashFormat, sha.ComputeHash, encoding);
@@ -176,7 +176,7 @@ namespace dotnet.common.hash
                     return Convert.ToBase64String(hashBytes);
                     break;
                 case HashFormat.HEX_LOWERCASE:
-                    return hashBytes.ByteToString("x2");
+                    return hashBytes.ByteToString("{0:x2}");
 
                 default:
                     return hashBytes.ByteToString();
@@ -184,15 +184,11 @@ namespace dotnet.common.hash
             
         }
 
-        internal static string ByteToString(this byte[] buff,string format="X2")
+        internal static string ByteToString(this byte[] buff,string format= "{0:X2}")
         {
-            string sbinary = "";
-
-            for (int i = 0; i < buff.Length; i++)
-            {
-                sbinary += buff[i].ToString(format); // hex format
-            }
-            return (sbinary);
+            StringBuilder sb = new StringBuilder();
+            buff.ForEach(b => sb.AppendFormat(format, b));
+            return sb.ToString();
         }
 
     }
