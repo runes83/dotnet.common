@@ -4,6 +4,9 @@ using System.Text;
 
 namespace dotnet.common.security
 {
+    /// <summary>
+    /// Generates a cryptographic strong string
+    /// </summary>
     public class RandomStringGenerator : IDisposable
     {
         public enum Characters
@@ -27,6 +30,12 @@ namespace dotnet.common.security
             Rand.Dispose();
         }
 
+        /// <summary>
+        /// Generates a cryptographic string of given length with given characters
+        /// </summary>
+        /// <param name="length">Length of string to generate</param>
+        /// <param name="characters">What chars should the string contain</param>
+        /// <returns>A random stirng that is cryptographic strong</returns>
         public static string GenerateRandomString(int length, Characters characters)
         {
             using (var rand = new RandomStringGenerator())
@@ -35,6 +44,13 @@ namespace dotnet.common.security
             }
         }
 
+
+        /// <summary>
+        /// Generates a cryptographic string of given length with given characters
+        /// </summary>
+        /// <param name="length">Length of string to generate</param>
+        /// <param name="chars">What chars should the string contain</param>
+        /// <returns>A random stirng that is cryptographic strong</returns>
         public string Generate(int length, params char[] chars)
         {
             var s = new StringBuilder();
@@ -48,6 +64,12 @@ namespace dotnet.common.security
             return s.ToString();
         }
 
+        /// <summary>
+        /// Generates a cryptographic string of given length with given characters
+        /// </summary>
+        /// <param name="length">Length of string to generate</param>
+        /// <param name="characters">What chars should the string contain</param>
+        /// <returns>A random stirng that is cryptographic strong</returns>
         public string Generate(int length, Characters characters)
         {
             return Generate(length, ReturnValidChars(characters));
