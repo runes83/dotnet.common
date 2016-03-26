@@ -1,5 +1,5 @@
 # dotnet.common
-Common extensions and helper methods for .
+Common extensions and helper methods for .NET developers
 #### No external dependencies
 
 ## Contains helper methods for:
