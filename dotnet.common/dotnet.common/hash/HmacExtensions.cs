@@ -5,7 +5,7 @@ namespace dotnet.common.hash
 {
     public static class HmacExtensions
     {
-        public static string ToHmacSha512(this byte[] value,string key, HashFormat hashFormat,Encoding encoding)
+        public static string ToHmacSha512(this byte[] value, string key, HashFormat hashFormat, Encoding encoding)
         {
             if (value == null)
                 return null;

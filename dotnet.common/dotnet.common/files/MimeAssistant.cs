@@ -35,10 +35,10 @@ namespace dotnet.common.files
             {"dmg", "application/octet-stream"},
             {"dms", "application/octet-stream"},
             {"doc", "application/msword"},
-            {"docx","application/vnd.openxmlformats-officedocument.wordprocessingml.document"},
+            {"docx", "application/vnd.openxmlformats-officedocument.wordprocessingml.document"},
             {"dotx", "application/vnd.openxmlformats-officedocument.wordprocessingml.template"},
-            {"docm","application/vnd.ms-word.document.macroEnabled.12"},
-            {"dotm","application/vnd.ms-word.template.macroEnabled.12"},
+            {"docm", "application/vnd.ms-word.document.macroEnabled.12"},
+            {"dotm", "application/vnd.ms-word.template.macroEnabled.12"},
             {"dtd", "application/xml-dtd"},
             {"dv", "video/x-dv"},
             {"dvi", "application/x-dvi"},
@@ -115,13 +115,13 @@ namespace dotnet.common.files
             {"pntg", "image/x-macpaint"},
             {"ppm", "image/x-portable-pixmap"},
             {"ppt", "application/vnd.ms-powerpoint"},
-            {"pptx","application/vnd.openxmlformats-officedocument.presentationml.presentation"},
-            {"potx","application/vnd.openxmlformats-officedocument.presentationml.template"},
-            {"ppsx","application/vnd.openxmlformats-officedocument.presentationml.slideshow"},
-            {"ppam","application/vnd.ms-powerpoint.addin.macroEnabled.12"},
-            {"pptm","application/vnd.ms-powerpoint.presentation.macroEnabled.12"},
-            {"potm","application/vnd.ms-powerpoint.template.macroEnabled.12"},
-            {"ppsm","application/vnd.ms-powerpoint.slideshow.macroEnabled.12"},
+            {"pptx", "application/vnd.openxmlformats-officedocument.presentationml.presentation"},
+            {"potx", "application/vnd.openxmlformats-officedocument.presentationml.template"},
+            {"ppsx", "application/vnd.openxmlformats-officedocument.presentationml.slideshow"},
+            {"ppam", "application/vnd.ms-powerpoint.addin.macroEnabled.12"},
+            {"pptm", "application/vnd.ms-powerpoint.presentation.macroEnabled.12"},
+            {"potm", "application/vnd.ms-powerpoint.template.macroEnabled.12"},
+            {"ppsm", "application/vnd.ms-powerpoint.slideshow.macroEnabled.12"},
             {"ps", "application/postscript"},
             {"qt", "video/quicktime"},
             {"qti", "image/x-quicktime"},
@@ -187,12 +187,12 @@ namespace dotnet.common.files
             {"xml", "application/xml"},
             {"xpm", "image/x-xpixmap"},
             {"xsl", "application/xml"},
-            {"xlsx","application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"},
-            {"xltx","application/vnd.openxmlformats-officedocument.spreadsheetml.template"},
-            {"xlsm","application/vnd.ms-excel.sheet.macroEnabled.12"},
-            {"xltm","application/vnd.ms-excel.template.macroEnabled.12"},
-            {"xlam","application/vnd.ms-excel.addin.macroEnabled.12"},
-            {"xlsb","application/vnd.ms-excel.sheet.binary.macroEnabled.12"},
+            {"xlsx", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"},
+            {"xltx", "application/vnd.openxmlformats-officedocument.spreadsheetml.template"},
+            {"xlsm", "application/vnd.ms-excel.sheet.macroEnabled.12"},
+            {"xltm", "application/vnd.ms-excel.template.macroEnabled.12"},
+            {"xlam", "application/vnd.ms-excel.addin.macroEnabled.12"},
+            {"xlsb", "application/vnd.ms-excel.sheet.binary.macroEnabled.12"},
             {"xslt", "application/xslt+xml"},
             {"xul", "application/vnd.mozilla.xul+xml"},
             {"xwd", "image/x-xwindowdump"},
@@ -201,13 +201,13 @@ namespace dotnet.common.files
         };
 
         /// <summary>
-        /// Returns a mimetype based on the file extension
+        ///     Returns a mimetype based on the file extension
         /// </summary>
         /// <param name="fileName">Filename or path with extension</param>
         /// <returns>Mimetype of the given filetype</returns>
         public static string GetMIMEType(string fileName)
         {
-            if(string.IsNullOrWhiteSpace(fileName))
+            if (string.IsNullOrWhiteSpace(fileName))
                 throw new ArgumentNullException("fileName is null or empty");
 
             if (MIMETypesDictionary.ContainsKey(Path.GetExtension(fileName).Remove(0, 1)))

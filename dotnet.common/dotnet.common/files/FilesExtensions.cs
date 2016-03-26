@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Configuration;
 using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
@@ -8,53 +7,60 @@ using System.Security.Cryptography;
 namespace dotnet.common.files
 {
     /// <summary>
-    /// Common extensions / helper methods for files and bytes
+    ///     Common extensions / helper methods for files and bytes
     /// </summary>
     public static class FilesExtensions
     {
-
         public enum SizeUnits
         {
-            Byte, KB, MB, GB, TB, PB, EB, ZB, YB
+            Byte,
+            KB,
+            MB,
+            GB,
+            TB,
+            PB,
+            EB,
+            ZB,
+            YB
         }
 
         /// <summary>
-        /// Formats length of a file on to a human readable format for example 2.3 MB
+        ///     Formats length of a file on to a human readable format for example 2.3 MB
         /// </summary>
         /// <param name="value">Length of file/byte array</param>
         /// <param name="unit">What unit to use MB, GB etc.</param>
         /// <returns>String with human readable format for the size</returns>
-        public static string ToFileSize(this Int64 value, SizeUnits unit)
+        public static string ToFileSize(this long value, SizeUnits unit)
         {
-            return (value / (double)Math.Pow(1024, (Int64)unit)).ToString("0.00") + " " + unit.ToString();
+            return (value/Math.Pow(1024, (long) unit)).ToString("0.00") + " " + unit;
         }
 
         /// <summary>
-        /// Formats length of a file on to a human readable format for example 2.3 MB
+        ///     Formats length of a file on to a human readable format for example 2.3 MB
         /// </summary>
         /// <param name="value">Length of file/byte array</param>
         /// <param name="unit">What unit to use MB, GB etc.</param>
         /// <returns>String with human readable format for the size</returns>
-        public static string ToFileSize(this Int32 value, SizeUnits unit)
+        public static string ToFileSize(this int value, SizeUnits unit)
         {
-            return (value / (double)Math.Pow(1024, (Int32)unit)).ToString("0.00") + " " + unit.ToString();
+            return (value/Math.Pow(1024, (int) unit)).ToString("0.00") + " " + unit;
         }
 
         /// <summary>
-        /// Returns the size of the byte array on a human readable format for example 2.3 MB
+        ///     Returns the size of the byte array on a human readable format for example 2.3 MB
         /// </summary>
         /// <param name="bytes"></param>
         /// <param name="unit">What unit to use MB, GB etc.</param>
         /// <returns>String with human readable format for the size</returns>
         public static string ToFileSize(this byte[] bytes, SizeUnits unit)
         {
-            if(bytes==null || bytes.Length==0)
-                return string.Format("0 {0}",unit);
+            if (bytes == null || bytes.Length == 0)
+                return string.Format("0 {0}", unit);
             return bytes.Length.ToFileSize(unit);
         }
 
         /// <summary>
-        /// Add trailing slash on a windows path if the path does not end with a \
+        ///     Add trailing slash on a windows path if the path does not end with a \
         /// </summary>
         /// <param name="value"></param>
         /// <returns></returns>
@@ -76,9 +82,10 @@ namespace dotnet.common.files
                 onlyFilesOlderThan);
         }
 
-        public static IList<string> GetFilesInFolderAsPaths(this string path,string pattern="*.*",bool includeSubDirectories=false,TimeSpan? onlyFilesOlderThan=null)
+        public static IList<string> GetFilesInFolderAsPaths(this string path, string pattern = "*.*",
+            bool includeSubDirectories = false, TimeSpan? onlyFilesOlderThan = null)
         {
-            if(!Directory.Exists(path))
+            if (!Directory.Exists(path))
                 return new List<string>();
 
             return
@@ -87,7 +94,8 @@ namespace dotnet.common.files
                     .ToList();
         }
 
-        public static IList<FileInfo> GetFilesInFolder(this string path, string pattern = "*.*", bool includeSubDirectories = false, TimeSpan? onlyFilesOlderThan = null)
+        public static IList<FileInfo> GetFilesInFolder(this string path, string pattern = "*.*",
+            bool includeSubDirectories = false, TimeSpan? onlyFilesOlderThan = null)
         {
             if (!Directory.Exists(path))
                 return new List<FileInfo>();
@@ -100,7 +108,7 @@ namespace dotnet.common.files
         }
 
         /// <summary>
-        /// Checks via SHA1 hash that two files have the same content (are identical)
+        ///     Checks via SHA1 hash that two files have the same content (are identical)
         /// </summary>
         /// <param name="filePath">Full filepath to file to check</param>
         /// <param name="otherFilePath">Full filepath to file to compare with</param>
@@ -126,4 +134,4 @@ namespace dotnet.common.files
             }
         }
     }
-    }
+}

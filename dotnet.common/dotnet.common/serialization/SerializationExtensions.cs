@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Xml.Serialization;
@@ -11,7 +10,7 @@ namespace dotnet.common.serialization
     public static class SerializationExtensions
     {
         /// <summary>
-        /// Serialize object to XML and returns the result as bytes
+        ///     Serialize object to XML and returns the result as bytes
         /// </summary>
         /// <param name="value">object to be serialized</param>
         /// <returns>Byte array of XML</returns>
@@ -20,13 +19,12 @@ namespace dotnet.common.serialization
             using (var ms = new MemoryStream())
             {
                 new XmlSerializer(value.GetType()).Serialize(ms, value);
-                return  ms.ToArray();
+                return ms.ToArray();
             }
-            
         }
 
         /// <summary>
-        /// Serialize object to XML and returns the result as string (UTF-8)
+        ///     Serialize object to XML and returns the result as string (UTF-8)
         /// </summary>
         /// <param name="value">object to be serialized</param>
         /// <returns>String of XML</returns>
@@ -65,7 +63,7 @@ namespace dotnet.common.serialization
 
         public Stream ExportStream(bool includeHeaderLine)
         {
-            MemoryStream ms = new MemoryStream();
+            var ms = new MemoryStream();
             using (var streamWriter = new StreamWriter(ms, Encoding.UTF8))
             {
                 streamWriter.Write(Export(includeHeaderLine));
@@ -77,15 +75,14 @@ namespace dotnet.common.serialization
 
         public string Export(bool includeHeaderLine)
         {
-
-            StringBuilder sb = new StringBuilder();
+            var sb = new StringBuilder();
             //Get properties using reflection.
-            IList<PropertyInfo> propertyInfos = typeof(T).GetProperties();
+            IList<PropertyInfo> propertyInfos = typeof (T).GetProperties();
 
             if (includeHeaderLine)
             {
                 //add header line.
-                foreach (PropertyInfo propertyInfo in propertyInfos)
+                foreach (var propertyInfo in propertyInfos)
                 {
                     sb.Append(propertyInfo.Name).Append(";");
                 }
@@ -93,19 +90,20 @@ namespace dotnet.common.serialization
             }
 
             //add value for each property.
-            foreach (T obj in Objects)
+            foreach (var obj in Objects)
             {
-                foreach (PropertyInfo propertyInfo in propertyInfos)
+                foreach (var propertyInfo in propertyInfos)
                 {
                     try
                     {
                         sb.Append(MakeValueCsvFriendly(propertyInfo.GetValue(obj, null))).Append(";");
                     }
-                    catch (Exception e) { }
+                    catch (Exception e)
+                    {
+                    }
                 }
                 sb.Remove(sb.Length - 1, 1).AppendLine();
             }
-
 
 
             sb.Insert(0, '\uFEFF');
@@ -132,17 +130,16 @@ namespace dotnet.common.serialization
 
             if (value is DateTime)
             {
-                if (((DateTime)value).TimeOfDay.TotalSeconds == 0)
-                    return ((DateTime)value).ToString("dd.MM.yyyy");
-                return ((DateTime)value).ToString("dd.MM.yyyy HH:mm:ss");
+                if (((DateTime) value).TimeOfDay.TotalSeconds == 0)
+                    return ((DateTime) value).ToString("dd.MM.yyyy");
+                return ((DateTime) value).ToString("dd.MM.yyyy HH:mm:ss");
             }
-            string output = value.ToString();
+            var output = value.ToString();
 
             if (output.Contains(",") || output.Contains("\""))
                 output = '"' + output.Replace("\"", "\"\"") + '"';
 
             return output;
-
         }
     }
 }

@@ -5,7 +5,7 @@ namespace dotnet.common.date
     public static class DateExtensions
     {
         /// <summary>
-        /// Removea milliseconds from a DateTime object
+        ///     Removea milliseconds from a DateTime object
         /// </summary>
         /// <param name="dt">DateTime to remove milliseconds from</param>
         /// <returns>DateTime without milliseconds</returns>
@@ -15,7 +15,7 @@ namespace dotnet.common.date
         }
 
         /// <summary>
-        /// Removea milliseconds and ticks from a DateTime object
+        ///     Removea milliseconds and ticks from a DateTime object
         /// </summary>
         /// <param name="dt">DateTime to remove milliseconds and ticks  from</param>
         /// <returns>DateTime without milliseconds and ticks</returns>
@@ -25,7 +25,7 @@ namespace dotnet.common.date
         }
 
         /// <summary>
-        /// Converts a datetime to Norwegian time. Use case UTC time to Norwegian time
+        ///     Converts a datetime to Norwegian time. Use case UTC time to Norwegian time
         /// </summary>
         /// <param name="timestamp">DateTime to convert</param>
         /// <returns>The datetime to format into Norwegian time</returns>
@@ -39,7 +39,7 @@ namespace dotnet.common.date
             //Get date and time in W. Europe Standard Time
             try
             {
-                TimeZoneInfo tzi = TimeZoneInfo.FindSystemTimeZoneById("W. Europe Standard Time");
+                var tzi = TimeZoneInfo.FindSystemTimeZoneById("W. Europe Standard Time");
                 return TimeZoneInfo.ConvertTimeFromUtc(timestamp.Value, tzi); // convert from utc to local
             }
             catch (Exception)
@@ -49,7 +49,7 @@ namespace dotnet.common.date
         }
 
         /// <summary>
-        /// Converts a datetime to Norwegian time. Use case UTC time to Norwegian time
+        ///     Converts a datetime to Norwegian time. Use case UTC time to Norwegian time
         /// </summary>
         /// <param name="timestamp">DateTime to convert</param>
         /// <returns>The datetime to format into Norwegian time</returns>
@@ -59,7 +59,7 @@ namespace dotnet.common.date
             {
                 //Set the time zone information to W. Europe Standard Time 
                 //Get date and time in W. Europe Standard Time
-                TimeZoneInfo tzi = TimeZoneInfo.FindSystemTimeZoneById("W. Europe Standard Time");
+                var tzi = TimeZoneInfo.FindSystemTimeZoneById("W. Europe Standard Time");
                 return TimeZoneInfo.ConvertTimeFromUtc(timestamp, tzi); // convert from utc to local
             }
             catch (Exception)
@@ -67,7 +67,5 @@ namespace dotnet.common.date
                 return timestamp;
             }
         }
-
-
     }
 }

@@ -1,19 +1,23 @@
 ﻿using System;
-using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 
 namespace dotnet.common.hash
 {
-    public enum HashFormat { HEX, hex, BASE64 };
+    public enum HashFormat
+    {
+        HEX,
+        hex,
+        BASE64
+    };
 
     /// <summary>
-    /// Hash and hmac helper class
+    ///     Hash and hmac helper class
     /// </summary>
     public static class HashExtensions
     {
         /// <summary>
-        /// Generates a MD5 hash of the given string
+        ///     Generates a MD5 hash of the given string
         /// </summary>
         /// <param name="value">text to hash</param>
         /// <param name="hashFormat">What format to output the result HEX (uppercase), hex (lowercase) or Base64</param>
@@ -28,7 +32,7 @@ namespace dotnet.common.hash
         }
 
         /// <summary>
-        /// Generates a SHA1 hash of the given string
+        ///     Generates a SHA1 hash of the given string
         /// </summary>
         /// <param name="value">text to hash</param>
         /// <param name="hashFormat">What format to output the result HEX (uppercase), hex (lowercase) or Base64</param>
@@ -36,7 +40,6 @@ namespace dotnet.common.hash
         /// <returns>SHA1 hash on the choosen format</returns>
         public static string ToSha1(this string value, HashFormat hashFormat, Encoding encoding = null)
         {
-           
             using (var sha = new SHA1CryptoServiceProvider())
             {
                 return ToShaHash(value, hashFormat, sha.ComputeHash, encoding);
@@ -44,7 +47,7 @@ namespace dotnet.common.hash
         }
 
         /// <summary>
-        /// Generates a SHA256 hash of the given string
+        ///     Generates a SHA256 hash of the given string
         /// </summary>
         /// <param name="value">text to hash</param>
         /// <param name="hashFormat">What format to output the result HEX (uppercase), hex (lowercase) or Base64</param>
@@ -52,7 +55,6 @@ namespace dotnet.common.hash
         /// <returns>SHA256 hash on the choosen format</returns>
         public static string ToSha256(this string value, HashFormat hashFormat, Encoding encoding = null)
         {
-
             using (var sha = new SHA256CryptoServiceProvider())
             {
                 return ToShaHash(value, hashFormat, sha.ComputeHash, encoding);
@@ -60,7 +62,7 @@ namespace dotnet.common.hash
         }
 
         /// <summary>
-        /// Generates a SHA384 hash of the given string
+        ///     Generates a SHA384 hash of the given string
         /// </summary>
         /// <param name="value">text to hash</param>
         /// <param name="hashFormat">What format to output the result HEX (uppercase), hex (lowercase) or Base64</param>
@@ -68,7 +70,6 @@ namespace dotnet.common.hash
         /// <returns>SHA384 hash on the choosen format</returns>
         public static string ToSha384(this string value, HashFormat hashFormat, Encoding encoding = null)
         {
-
             using (var sha = new SHA384CryptoServiceProvider())
             {
                 return ToShaHash(value, hashFormat, sha.ComputeHash, encoding);
@@ -76,7 +77,7 @@ namespace dotnet.common.hash
         }
 
         /// <summary>
-        /// Generates a SHA512 hash of the given string
+        ///     Generates a SHA512 hash of the given string
         /// </summary>
         /// <param name="value">text to hash</param>
         /// <param name="hashFormat">What format to output the result HEX (uppercase), hex (lowercase) or Base64</param>
@@ -84,7 +85,6 @@ namespace dotnet.common.hash
         /// <returns>SHA512 hash on the choosen format</returns>
         public static string ToSha512(this string value, HashFormat hashFormat, Encoding encoding = null)
         {
-
             using (var sha = new SHA512CryptoServiceProvider())
             {
                 return ToShaHash(value, hashFormat, sha.ComputeHash, encoding);
@@ -92,7 +92,7 @@ namespace dotnet.common.hash
         }
 
         /// <summary>
-        /// Generates a MD5 hash of a byte array
+        ///     Generates a MD5 hash of a byte array
         /// </summary>
         /// <param name="value">byte array to be hashed</param>
         /// <returns>Byte array with the hash result</returns>
@@ -107,7 +107,7 @@ namespace dotnet.common.hash
         }
 
         /// <summary>
-        /// Generates a SHA1 hash of a byte array
+        ///     Generates a SHA1 hash of a byte array
         /// </summary>
         /// <param name="value">byte array to be hashed</param>
         /// <returns>Byte array with the hash result</returns>
@@ -122,7 +122,7 @@ namespace dotnet.common.hash
         }
 
         /// <summary>
-        /// Generates a SHA256 hash of a byte array
+        ///     Generates a SHA256 hash of a byte array
         /// </summary>
         /// <param name="value">byte array to be hashed</param>
         /// <returns>Byte array with the hash result</returns>
@@ -137,7 +137,7 @@ namespace dotnet.common.hash
         }
 
         /// <summary>
-        /// Generates a SHA384 hash of a byte array
+        ///     Generates a SHA384 hash of a byte array
         /// </summary>
         /// <param name="value">byte array to be hashed</param>
         /// <returns>Byte array with the hash result</returns>
@@ -152,7 +152,7 @@ namespace dotnet.common.hash
         }
 
         /// <summary>
-        /// Generates a SHA512 hash of a byte array
+        ///     Generates a SHA512 hash of a byte array
         /// </summary>
         /// <param name="value">byte array to be hashed</param>
         /// <returns>Byte array with the hash result</returns>
@@ -167,7 +167,7 @@ namespace dotnet.common.hash
         }
 
         /// <summary>
-        /// Generates a MD5 hash of a byte array and returns as string on the choosen format
+        ///     Generates a MD5 hash of a byte array and returns as string on the choosen format
         /// </summary>
         /// <param name="value">byte array to be hashed</param>
         /// <param name="hashFormat">What format to output the result HEX (uppercase), hex (lowercase) or Base64</param>
@@ -183,7 +183,7 @@ namespace dotnet.common.hash
         }
 
         /// <summary>
-        /// Generates a SHA1 hash of a byte array and returns as string on the choosen format
+        ///     Generates a SHA1 hash of a byte array and returns as string on the choosen format
         /// </summary>
         /// <param name="value">byte array to be hashed</param>
         /// <param name="hashFormat">What format to output the result HEX (uppercase), hex (lowercase) or Base64</param>
@@ -199,7 +199,7 @@ namespace dotnet.common.hash
         }
 
         /// <summary>
-        /// Generates a SHA256 hash of a byte array and returns as string on the choosen format
+        ///     Generates a SHA256 hash of a byte array and returns as string on the choosen format
         /// </summary>
         /// <param name="value">byte array to be hashed</param>
         /// <param name="hashFormat">What format to output the result HEX (uppercase), hex (lowercase) or Base64</param>
@@ -215,7 +215,7 @@ namespace dotnet.common.hash
         }
 
         /// <summary>
-        /// Generates a SHA384 hash of a byte array and returns as string on the choosen format
+        ///     Generates a SHA384 hash of a byte array and returns as string on the choosen format
         /// </summary>
         /// <param name="value">byte array to be hashed</param>
         /// <param name="hashFormat">What format to output the result HEX (uppercase), hex (lowercase) or Base64</param>
@@ -231,7 +231,7 @@ namespace dotnet.common.hash
         }
 
         /// <summary>
-        /// Generates a SHA512 hash of a byte array and returns as string on the choosen format
+        ///     Generates a SHA512 hash of a byte array and returns as string on the choosen format
         /// </summary>
         /// <param name="value">byte array to be hashed</param>
         /// <param name="hashFormat">What format to output the result HEX (uppercase), hex (lowercase) or Base64</param>
@@ -246,16 +246,15 @@ namespace dotnet.common.hash
             }
         }
 
-
-        private static string ToShaHash(this string value, HashFormat hashFormat, 
-            Func<byte[],byte[]> ComputeHash , Encoding encoding = null)
+        private static string ToShaHash(this string value, HashFormat hashFormat,
+            Func<byte[], byte[]> ComputeHash, Encoding encoding = null)
         {
             if (string.IsNullOrWhiteSpace(value))
                 return null;
 
             if (encoding == null)
                 encoding = Encoding.UTF8;
-            
+
             return ComputeHash(encoding.GetBytes(value)).EncodeHashBytes(hashFormat);
         }
 
@@ -272,15 +271,13 @@ namespace dotnet.common.hash
                 default:
                     return hashBytes.ByteToString();
             }
-            
         }
 
-        internal static string ByteToString(this byte[] buff,string format= "{0:X2}")
+        internal static string ByteToString(this byte[] buff, string format = "{0:X2}")
         {
-            StringBuilder sb = new StringBuilder();
+            var sb = new StringBuilder();
             buff.ForEach(b => sb.AppendFormat(format, b));
             return sb.ToString();
         }
-
     }
 }

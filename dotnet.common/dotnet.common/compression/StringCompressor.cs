@@ -8,7 +8,7 @@ namespace dotnet.common.compression
     public static class StringCompressor
     {
         /// <summary>
-        /// Compresses the string with GZIP  (UTF-8).
+        ///     Compresses the string with GZIP  (UTF-8).
         /// </summary>
         /// <param name="text">The text.</param>
         /// <returns></returns>
@@ -18,7 +18,7 @@ namespace dotnet.common.compression
                 return text;
             using (var memoryStream = new MemoryStream())
             {
-                byte[] buffer = Encoding.UTF8.GetBytes(text);
+                var buffer = Encoding.UTF8.GetBytes(text);
                 using (var gZipStream = new GZipStream(memoryStream, CompressionMode.Compress, true))
                 {
                     gZipStream.Write(buffer, 0, buffer.Length);
@@ -37,7 +37,7 @@ namespace dotnet.common.compression
         }
 
         /// <summary>
-        /// Decompresses the string with GZIP (UTF-8).
+        ///     Decompresses the string with GZIP (UTF-8).
         /// </summary>
         /// <param name="compressedText">The compressed text.</param>
         /// <returns></returns>
@@ -45,10 +45,10 @@ namespace dotnet.common.compression
         {
             if (string.IsNullOrWhiteSpace(compressedText))
                 return compressedText;
-            byte[] gZipBuffer = Convert.FromBase64String(compressedText);
+            var gZipBuffer = Convert.FromBase64String(compressedText);
             using (var memoryStream = new MemoryStream())
             {
-                int dataLength = BitConverter.ToInt32(gZipBuffer, 0);
+                var dataLength = BitConverter.ToInt32(gZipBuffer, 0);
                 memoryStream.Write(gZipBuffer, 4, gZipBuffer.Length - 4);
 
                 var buffer = new byte[dataLength];

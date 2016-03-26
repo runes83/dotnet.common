@@ -5,7 +5,7 @@ namespace dotnet.common.enums
     public static class EnumExtensions
     {
         /// <summary>
-        /// Parse from one type of enum to another assuming that they have the same values
+        ///     Parse from one type of enum to another assuming that they have the same values
         /// </summary>
         /// <typeparam name="R">From</typeparam>
         /// <typeparam name="T">To</typeparam>
@@ -15,11 +15,11 @@ namespace dotnet.common.enums
         {
             if (string.IsNullOrEmpty(value.ToString()))
                 return default(T);
-            return (T)Enum.Parse(typeof(T), value.ToString(), true);
+            return (T) Enum.Parse(typeof (T), value.ToString(), true);
         }
 
         /// <summary>
-        /// Parse from string to Enum value
+        ///     Parse from string to Enum value
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="value"></param>
@@ -28,7 +28,7 @@ namespace dotnet.common.enums
         {
             if (string.IsNullOrEmpty(value))
                 return default(T);
-            return (T)Enum.Parse(typeof(T), value, true);
+            return (T) Enum.Parse(typeof (T), value, true);
         }
     }
 }

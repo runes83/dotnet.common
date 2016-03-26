@@ -1,0 +1,15 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+    <metadata>
+        <id>dotnet.common</id>
+        <version>1.0.0</version>
+        <title>Dotnet.common</title>
+        <authors>Rune Synnevåg</authors>
+        <requireLicenseAcceptance>false</requireLicenseAcceptance>
+        <description>Common extensions and helper methods for .NET developers</description>
+        <summary>Common extensions and helper methods for .NET developers</summary>
+    </metadata>
+    <files>
+        <file src="..\dotnet.common\bin\Release\dotnet.common.dll" target="lib\net40\dotnet.common.dll" />
+    </files>
+</package>

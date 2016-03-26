@@ -4,16 +4,15 @@ using System.Linq;
 using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
-using dotnet.common.security;
 using dotnet.common.strings;
 
 namespace dotnet.common.encryption
 {
     public class CertificateEncryptionService : IEncryption, IDisposable
     {
-        private X509Certificate2 certificate;
         private const int ivSize = 16;
         private const int BlockSize = 128;
+        private X509Certificate2 certificate;
 
         public CertificateEncryptionService(X509Certificate2 certificate)
         {
