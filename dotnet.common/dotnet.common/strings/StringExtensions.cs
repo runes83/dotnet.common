@@ -3,8 +3,17 @@ using System.Text;
 
 namespace dotnet.common.strings
 {
+    /// <summary>
+    /// Common string extensions 
+    /// </summary>
     public static class StringExtensions
     {
+        /// <summary>
+        /// Format string using the string.format method
+        /// </summary>
+        /// <param name="format"></param>
+        /// <param name="args"></param>
+        /// <returns></returns>
         public static string FormatWith(this string format, params object[] args)
         {
             if (format == null)
@@ -13,6 +22,12 @@ namespace dotnet.common.strings
             return string.Format(format, args);
         }
 
+        /// <summary>
+        /// Format string using the string.format method
+        /// </summary>
+        /// <param name="format"></param>
+        /// <param name="args"></param>
+        /// <returns></returns>
         public static string FormatWith(this string format, IFormatProvider provider, params object[] args)
         {
             if (format == null)
@@ -24,14 +39,14 @@ namespace dotnet.common.strings
         /// <summary>
         /// Enables to add lines to stringbuilder with formating
         /// </summary>
-        /// <param name="sb"></param>
+        /// <param name="stringBuilder"></param>
         /// <param name="text"></param>
         /// <param name="args"></param>
         /// <returns></returns>
-        public static StringBuilder AppendLineFormat(this StringBuilder sb, string text, params object[] args)
+        public static StringBuilder AppendLineFormat(this StringBuilder stringBuilder, string text, params object[] args)
         {
-            sb.AppendLine(string.Format(text, args));
-            return sb;
+            stringBuilder.AppendLine(string.Format(text, args));
+            return stringBuilder;
         }
 
         /// <summary>

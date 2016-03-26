@@ -9,7 +9,10 @@ namespace dotnet.common.security
     /// </summary>
     public class SecureGuid
     {
-
+        /// <summary>
+        /// Create a secure guid that is cryptograpically strong
+        /// </summary>
+        /// <returns>A cryptograpically strong GUID</returns>
         public static Guid NewGuid()
         {
             byte[] bytes = { 0x00, 0x00, 0x00, 0x00,

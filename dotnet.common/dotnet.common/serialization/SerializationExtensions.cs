@@ -10,6 +10,11 @@ namespace dotnet.common.serialization
 {
     public static class SerializationExtensions
     {
+        /// <summary>
+        /// Serialize object to XML and returns the result as bytes
+        /// </summary>
+        /// <param name="value">object to be serialized</param>
+        /// <returns>Byte array of XML</returns>
         public static byte[] SerializeToXMLBytes(this object value)
         {
             using (var ms = new MemoryStream())
@@ -20,6 +25,11 @@ namespace dotnet.common.serialization
             
         }
 
+        /// <summary>
+        /// Serialize object to XML and returns the result as string (UTF-8)
+        /// </summary>
+        /// <param name="value">object to be serialized</param>
+        /// <returns>String of XML</returns>
         public static string SerializeToXMLString(this object value)
         {
             using (var ms = new MemoryStream())

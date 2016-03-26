@@ -200,10 +200,16 @@ namespace dotnet.common.files
             {"zip", "application/zip"}
         };
 
+        /// <summary>
+        /// Returns a mimetype based on the file extension
+        /// </summary>
+        /// <param name="fileName">Filename or path with extension</param>
+        /// <returns>Mimetype of the given filetype</returns>
         public static string GetMIMEType(string fileName)
         {
             if(string.IsNullOrWhiteSpace(fileName))
                 throw new ArgumentNullException("fileName is null or empty");
+
             if (MIMETypesDictionary.ContainsKey(Path.GetExtension(fileName).Remove(0, 1)))
             {
                 return MIMETypesDictionary[Path.GetExtension(fileName).Remove(0, 1)];

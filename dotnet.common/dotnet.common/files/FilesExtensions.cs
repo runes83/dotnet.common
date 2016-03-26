@@ -7,6 +7,9 @@ using System.Security.Cryptography;
 
 namespace dotnet.common.files
 {
+    /// <summary>
+    /// Common extensions / helper methods for files and bytes
+    /// </summary>
     public static class FilesExtensions
     {
 
@@ -15,16 +18,34 @@ namespace dotnet.common.files
             Byte, KB, MB, GB, TB, PB, EB, ZB, YB
         }
 
+        /// <summary>
+        /// Formats length of a file on to a human readable format for example 2.3 MB
+        /// </summary>
+        /// <param name="value">Length of file/byte array</param>
+        /// <param name="unit">What unit to use MB, GB etc.</param>
+        /// <returns>String with human readable format for the size</returns>
         public static string ToFileSize(this Int64 value, SizeUnits unit)
         {
             return (value / (double)Math.Pow(1024, (Int64)unit)).ToString("0.00") + " " + unit.ToString();
         }
 
+        /// <summary>
+        /// Formats length of a file on to a human readable format for example 2.3 MB
+        /// </summary>
+        /// <param name="value">Length of file/byte array</param>
+        /// <param name="unit">What unit to use MB, GB etc.</param>
+        /// <returns>String with human readable format for the size</returns>
         public static string ToFileSize(this Int32 value, SizeUnits unit)
         {
             return (value / (double)Math.Pow(1024, (Int32)unit)).ToString("0.00") + " " + unit.ToString();
         }
 
+        /// <summary>
+        /// Returns the size of the byte array on a human readable format for example 2.3 MB
+        /// </summary>
+        /// <param name="bytes"></param>
+        /// <param name="unit">What unit to use MB, GB etc.</param>
+        /// <returns>String with human readable format for the size</returns>
         public static string ToFileSize(this byte[] bytes, SizeUnits unit)
         {
             if(bytes==null || bytes.Length==0)
@@ -32,17 +53,17 @@ namespace dotnet.common.files
             return bytes.Length.ToFileSize(unit);
         }
 
+        /// <summary>
+        /// Add trailing slash on a windows path if the path does not end with a \
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
         public static string EnsureLastSlashInWindowsPath(this string value)
         {
             if (string.IsNullOrWhiteSpace(value))
                 return value;
 
-            if (value.EndsWith("\\"))
-                return value;
-            else
-            {
-                return value + "\\";
-            }
+            return value.EndsWith("\\") ? value : value + "\\";
         }
 
         public static IList<string> GetFilesInFolderWithExtension(this string path, string fileExtension,
@@ -78,6 +99,12 @@ namespace dotnet.common.files
                 .ToList();
         }
 
+        /// <summary>
+        /// Checks via SHA1 hash that two files have the same content (are identical)
+        /// </summary>
+        /// <param name="filePath">Full filepath to file to check</param>
+        /// <param name="otherFilePath">Full filepath to file to compare with</param>
+        /// <returns>True if the files are identifical (content) and false if not</returns>
         public static bool MatchFileContent(this string filePath, string otherFilePath)
         {
             if (string.IsNullOrWhiteSpace(filePath))
