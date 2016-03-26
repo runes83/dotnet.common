@@ -1,5 +1,6 @@
 # dotnet.common
-Common extensions and helper methods for .net
+Common extensions and helper methods for .
+#### No external dependencies
 
 ## Contains helper methods for:
 * String
