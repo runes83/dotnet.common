@@ -6,11 +6,15 @@ Tired of writing the same code each tome you start a new project, or going back 
 #### No external dependencies
 
 ## Contains helper methods for:
-* String
-* Compression with GZIP
+* String (format, truncate etc.)
+* Compression with GZIP (bytes and string)
 * Dates
-* Parsing numbers
+* Parsing (guid, numbers)
+* Enum (Copy between enums)
 * Hash and HMCA (MD5, SHA1, Sha256, Sha284, Sha512)
-* Encryption (Both Certificate and string key based)
+* Encryption (Both Certificate and string key based) (string, bytes and files)
 * Reflection (Set, get and list properties on a object)
-* Files
+* Files (Get mimetype for filename, get files in folder with filters, file size formatting, check if files are identical (hash))
+* Random string generator
+* Serialization (object to=> csv, xml)
+* Misc helper methods
