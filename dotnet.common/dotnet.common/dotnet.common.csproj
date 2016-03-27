@@ -30,6 +30,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Microsoft.CSharp" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml" />
@@ -49,6 +50,7 @@
     <Compile Include="encryption\EncryptionService.cs" />
     <Compile Include="encryption\Encryptor.cs" />
     <Compile Include="encryption\IEncryption.cs" />
+    <Compile Include="reflection\ReflectionExtensions.cs" />
     <Compile Include="security\RandomStringGenerator.cs" />
     <Compile Include="security\SecureGuid.cs" />
     <Compile Include="serialization\SerializationExtensions.cs" />
