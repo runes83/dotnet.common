@@ -72,16 +72,33 @@ namespace dotnet.common.files
             return value.EndsWith("\\") ? value : value + "\\";
         }
 
-        public static IList<string> GetFilesInFolderWithExtension(this string path, string fileExtension,
+        /// <summary>
+        ///     Get a list of alle the files with full path of all the files in a folder can be filered by file extension
+        /// </summary>
+        /// <param name="path">The path to the directory to list</param>
+        /// <param name="fileExtension">Filter files to get by this extension (optional) </param>
+        /// <param name="includeSubDirectories">Include files in subdirectories (recursive) (optional)</param>
+        /// <param name="onlyFilesOlderThan">Only get files older than (optional)</param>
+        /// <returns>List of files with full paths as list of strings</returns>
+        public static IList<string> GetFilesInFolderWithExtension(this string path, string fileExtension = null,
             bool includeSubDirectories = false, TimeSpan? onlyFilesOlderThan = null)
         {
-            if (!fileExtension.StartsWith("."))
+            if (!string.IsNullOrWhiteSpace(fileExtension) && !fileExtension.StartsWith("."))
                 fileExtension = "." + fileExtension;
+
 
             return path.GetFilesInFolderAsPaths(string.Format("*{0}", fileExtension), includeSubDirectories,
                 onlyFilesOlderThan);
         }
 
+        /// <summary>
+        ///     Get a list of alle the files with full path of all the files in a folder can be filered by file extension
+        /// </summary>
+        /// <param name="path">The path to the directory to list</param>
+        /// <param name="pattern">Filter files to get by this pattern (optional) </param>
+        /// <param name="includeSubDirectories">Include files in subdirectories (recursive) (optional)</param>
+        /// <param name="onlyFilesOlderThan">Only get files older than (optional)</param>
+        /// <returns>List of files with full paths as list of strings</returns>
         public static IList<string> GetFilesInFolderAsPaths(this string path, string pattern = "*.*",
             bool includeSubDirectories = false, TimeSpan? onlyFilesOlderThan = null)
         {
@@ -94,6 +111,14 @@ namespace dotnet.common.files
                     .ToList();
         }
 
+        /// <summary>
+        ///     Get a list of alle the files with full path of all the files in a folder can be filered by file extension
+        /// </summary>
+        /// <param name="path">The path to the directory to list</param>
+        /// <param name="pattern">Filter files to get by this pattern (optional) </param>
+        /// <param name="includeSubDirectories">Include files in subdirectories (recursive) (optional)</param>
+        /// <param name="onlyFilesOlderThan">Only get files older than (optional)</param>
+        /// <returns>List of fileinfo</returns>
         public static IList<FileInfo> GetFilesInFolder(this string path, string pattern = "*.*",
             bool includeSubDirectories = false, TimeSpan? onlyFilesOlderThan = null)
         {

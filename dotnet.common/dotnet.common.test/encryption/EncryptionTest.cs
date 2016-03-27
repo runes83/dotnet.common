@@ -1,16 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
-using System.Text;
 using dotnet.common.encryption;
 using dotnet.common.hash;
-using dotnet.common.security;
 using NUnit.Framework;
 
-namespace dotnet.common.test
+namespace dotnet.common.test.encryption
 {
     [TestFixture]
     public class EncryptionTest

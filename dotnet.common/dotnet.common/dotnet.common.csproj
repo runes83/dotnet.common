@@ -36,7 +36,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="compression\StringCompressor.cs" />
+    <Compile Include="compression\Compression.cs" />
     <Compile Include="date\DateExtensions.cs" />
     <Compile Include="enums\EnumExtensions.cs" />
     <Compile Include="files\FilesExtensions.cs" />
@@ -44,6 +44,7 @@
     <Compile Include="hash\HashExtensions.cs" />
     <Compile Include="hash\HmacExtensions.cs" />
     <Compile Include="MiscExtensions.cs" />
+    <Compile Include="MiscParsingExtensions.cs" />
     <Compile Include="numbers\NumberExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="encryption\CertificateEncryptionService.cs" />

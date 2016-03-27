@@ -8,17 +8,32 @@ using dotnet.common.strings;
 
 namespace dotnet.common.encryption
 {
-    public class CertificateEncryptionService : IEncryption, IDisposable
+    /// <summary>
+    ///     Encrypt files and string using a Certificate as key. The files and string larger than the key size is encrypted
+    ///     with AES256.
+    ///     A AES encryption key is generated and encrypted with the certificate and then emebedded in the result along with
+    ///     the IV.
+    /// </summary>
+    public class CertificateEncryptionService : IEncryption
     {
         private const int ivSize = 16;
         private const int BlockSize = 128;
         private X509Certificate2 certificate;
 
+        /// <summary>
+        ///     Initialize the encryptionservice
+        /// </summary>
+        /// <param name="certificate">The certificate to encrypt with as a X509Certificate2 object</param>
         public CertificateEncryptionService(X509Certificate2 certificate)
         {
             this.certificate = certificate;
         }
 
+        /// <summary>
+        ///     Initialize the encryptionservice
+        /// </summary>
+        /// <param name="certificatePath">Path to the certificate to use</param>
+        /// <param name="password">Password to the ceriticate to use</param>
         public CertificateEncryptionService(string certificatePath, string password)
         {
             if (!File.Exists(certificatePath))
@@ -28,11 +43,22 @@ namespace dotnet.common.encryption
                 X509KeyStorageFlags.MachineKeySet);
         }
 
+        /// <summary>
+        ///     Initialize the encryptionservice
+        /// </summary>
+        /// <param name="certificateDataBytes">Certificate to use as bytes</param>
+        /// <param name="password">Password to the ceriticate to use</param>
         public CertificateEncryptionService(byte[] certificateDataBytes, string password)
         {
             certificate = new X509Certificate2(certificateDataBytes, password, X509KeyStorageFlags.MachineKeySet);
         }
 
+        /// <summary>
+        ///     Initialize the encryptionservice
+        /// </summary>
+        /// <param name="thumbprint">The thumprint for the ceriticate to use</param>
+        /// <param name="storeName">What certificate store to use default My store</param>
+        /// <param name="storeLocation">The certificate store location to use default CurrentUser</param>
         public CertificateEncryptionService(string thumbprint, StoreName storeName = StoreName.My,
             StoreLocation storeLocation = StoreLocation.CurrentUser)
         {
@@ -46,6 +72,11 @@ namespace dotnet.common.encryption
                 // currentCerts.Find(X509FindType.FindBySubjectDistinguishedName, certName, true);
                 var currentCerts = store.Certificates.Find(X509FindType.FindByThumbprint, thumbprint.ToUpperInvariant(),
                     false);
+
+                if (currentCerts.Count == 0)
+                    currentCerts = store.Certificates.Find(X509FindType.FindByThumbprint, thumbprint.ToLowerInvariant(),
+                        false);
+
                 if (currentCerts.Count == 0)
                     throw new ApplicationException("Cannot find certificate with thumprint: {0}".FormatWith(thumbprint));
                 // Return the first certificate in the collection, has the right name and is current.
@@ -57,11 +88,19 @@ namespace dotnet.common.encryption
             }
         }
 
+        /// <summary>
+        ///     Disposes internal resources
+        /// </summary>
         public void Dispose()
         {
             certificate = null;
         }
 
+        /// <summary>
+        ///     Encryptes file bytes and returns encrypted bytes.
+        /// </summary>
+        /// <param name="fileBytes">Bytes to encrypt</param>
+        /// <returns>Encrypted bytes</returns>
         public byte[] EncryptFile(byte[] fileBytes)
         {
             using (var rsa = certificate.PublicKey.Key as RSACryptoServiceProvider)
@@ -73,11 +112,21 @@ namespace dotnet.common.encryption
             }
         }
 
+        /// <summary>
+        ///     Encrypt file
+        /// </summary>
+        /// <param name="filePath">Filepath (full path) to the file that should be encrypted</param>
+        /// <param name="filePathToEncryptedFile">ilepath (full path) to where to write the encrypted file</param>
         public void EncryptFile(string filePath, string filePathToEncryptedFile)
         {
             File.WriteAllBytes(filePathToEncryptedFile, File.ReadAllBytes(filePath));
         }
 
+        /// <summary>
+        ///     Encryptes string
+        /// </summary>
+        /// <param name="value">String value to encrypt</param>
+        /// <returns>Encrypted string</returns>
         public string EncryptString(string value)
         {
             using (var rsa = certificate.PublicKey.Key as RSACryptoServiceProvider)
@@ -97,6 +146,11 @@ namespace dotnet.common.encryption
             }
         }
 
+        /// <summary>
+        ///     Decrypt filebytes encrypted with the EncryptFile method
+        /// </summary>
+        /// <param name="fileBytes">Bytes to be decrypted</param>
+        /// <returns>Unencrypted bytes</returns>
         public byte[] DecryptFile(byte[] fileBytes)
         {
             using (var rsa = certificate.PrivateKey as RSACryptoServiceProvider)
@@ -109,11 +163,21 @@ namespace dotnet.common.encryption
             }
         }
 
+        /// <summary>
+        ///     Encrypt file  encrypted with the EncryptFile method
+        /// </summary>
+        /// <param name="filePath">Filepath (full path) to the file that should be encrypted</param>
+        /// <param name="filePathToDecryptedFile">ilepath (full path) to where to write the decrypted file</param>
         public void DecryptFile(string filePath, string filePathToDecryptedFile)
         {
             File.WriteAllBytes(filePathToDecryptedFile, File.ReadAllBytes(filePath));
         }
 
+        /// <summary>
+        ///     Decrypt string encrypted with the EncryptString method
+        /// </summary>
+        /// <param name="value">String to be decrypted</param>
+        /// <returns>Unencrypted string</returns>
         public string DecryptString(string value)
         {
             if (value.Contains('|'))

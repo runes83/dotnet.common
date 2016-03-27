@@ -8,23 +8,40 @@ using System.Text;
 
 namespace dotnet.common.encryption
 {
-    public class EncryptionService : IEncryption, IDisposable
+    /// <summary>
+    ///     Encryption service uses AES 256 bit encryption with a string (base64 encoded) key
+    ///     Remember to dispose after use
+    /// </summary>
+    public class EncryptionService : IEncryption
     {
         private const int ivSize = 16;
         private const int BlockSize = 128;
         private readonly SecureString _secret;
 
+        /// <summary>
+        ///     Key to use when encryption as a base64 encoded string 256 bit
+        ///     Use the GenerateNewSecret method to generate a key.
+        /// </summary>
+        /// <param name="secret">256 bit base64 encoed string</param>
         public EncryptionService(string secret)
         {
             _secret = new SecureString();
             secret.ForEach(x => _secret.AppendChar(x));
         }
 
+        /// <summary>
+        ///     Disposes internal resources
+        /// </summary>
         public void Dispose()
         {
             _secret.Dispose();
         }
 
+        /// <summary>
+        ///     Encryptes file bytes and returns encrypted bytes.
+        /// </summary>
+        /// <param name="fileBytes">Bytes to encrypt</param>
+        /// <returns>Encrypted bytes</returns>
         public byte[] EncryptFile(byte[] fileBytes)
         {
             var result = Encryptor.Encrypt(fileBytes, Convert.FromBase64String(SecretAsString()));
@@ -32,17 +49,32 @@ namespace dotnet.common.encryption
             return result.Iv.Concat(result.Bytes).ToArray();
         }
 
+        /// <summary>
+        ///     Encrypt file
+        /// </summary>
+        /// <param name="filePath">Filepath (full path) to the file that should be encrypted</param>
+        /// <param name="filePathToEncryptedFile">ilepath (full path) to where to write the encrypted file</param>
         public void EncryptFile(string filePath, string filePathToEncryptedFile)
         {
             File.WriteAllBytes(filePathToEncryptedFile, File.ReadAllBytes(filePath));
         }
 
+        /// <summary>
+        ///     Encryptes string
+        /// </summary>
+        /// <param name="value">String value to encrypt</param>
+        /// <returns>Encrypted string</returns>
         public string EncryptString(string value)
         {
             var result = Encryptor.Encrypt(Encoding.UTF8.GetBytes(value), Convert.FromBase64String(SecretAsString()));
             return string.Format("{0}|{1}", Convert.ToBase64String(result.Bytes), Convert.ToBase64String(result.Iv));
         }
 
+        /// <summary>
+        ///     Decrypt filebytes encrypted with the EncryptFile method
+        /// </summary>
+        /// <param name="fileBytes">Bytes to be decrypted</param>
+        /// <returns>Unencrypted bytes</returns>
         public byte[] DecryptFile(byte[] fileBytes)
         {
             var iv = fileBytes.Take(ivSize).ToArray();
@@ -51,11 +83,21 @@ namespace dotnet.common.encryption
             return Encryptor.Decrypt(new EncryptedData(dataBytes, iv), Convert.FromBase64String(SecretAsString()));
         }
 
+        /// <summary>
+        ///     Encrypt file  encrypted with the EncryptFile method
+        /// </summary>
+        /// <param name="filePath">Filepath (full path) to the file that should be encrypted</param>
+        /// <param name="filePathToDecryptedFile">ilepath (full path) to where to write the decrypted file</param>
         public void DecryptFile(string filePath, string filePathToDecryptedFile)
         {
             File.WriteAllBytes(filePathToDecryptedFile, File.ReadAllBytes(filePath));
         }
 
+        /// <summary>
+        ///     Decrypt string encrypted with the EncryptString method
+        /// </summary>
+        /// <param name="value">String to be decrypted</param>
+        /// <returns>Unencrypted string</returns>
         public string DecryptString(string value)
         {
             if (!value.Contains("|"))
@@ -69,6 +111,10 @@ namespace dotnet.common.encryption
             return Encoding.UTF8.GetString(result);
         }
 
+        /// <summary>
+        ///     Generates a 256 bit base64 encoded string to be used as encryption key.
+        /// </summary>
+        /// <returns>256 bit base64 encoded string</returns>
         public static string GenerateNewSecret()
         {
             using (var aesManaged = new AesManaged())

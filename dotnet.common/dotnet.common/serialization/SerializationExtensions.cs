@@ -37,14 +37,14 @@ namespace dotnet.common.serialization
             }
         }
 
-        public static byte[] SerializeToCSVString<T>(this IEnumerable<T> list)
-        {
-            //using (var ms = new MemoryStream())
-            //{
-            //    return new CsvExport<T>(list.ToList()).ExportToBytes();
-            //}
-            return null;
-        }
+        //public static byte[] SerializeToCSVString<T>(this IEnumerable<T> list)
+        //{
+        //    //using (var ms = new MemoryStream())
+        //    //{
+        //    //    return new CsvExport<T>(list.ToList()).ExportToBytes();
+        //    //}
+        //    return null;
+        //}
     }
 
     public class CsvExport<T> where T : class

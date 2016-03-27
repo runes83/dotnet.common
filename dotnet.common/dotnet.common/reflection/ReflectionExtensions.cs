@@ -63,6 +63,11 @@ namespace dotnet.common.reflection
             return null;
         }
 
+        /// <summary>
+        /// List all the properties of the given object as a Dictionary with name and value
+        /// </summary>
+        /// <param name="objectValue"></param>
+        /// <returns>A dicitionart with name value of all the properties of the give object</returns>
         public static Dictionary<string, dynamic> ListProperties(this object objectValue)
         {
             return objectValue
