@@ -13,7 +13,7 @@ namespace dotnet.common.hash
         /// <param name="hashFormat">What format to output the result HEX (uppercase), hex (lowercase) or Base64</param>
         /// <param name="encoding">What encoding to use defauts to UTF-8</param>
         /// <returns>HMAC as string</returns>
-        public static string ToHmacSha512(this byte[] value, string secretKey, HashFormat hashFormat, Encoding encoding)
+        public static string ToHmacSha512(this byte[] value, string secretKey, HashFormat hashFormat, Encoding encoding=null)
         {
             if (value == null)
                 return null;
@@ -35,7 +35,7 @@ namespace dotnet.common.hash
         /// <param name="hashFormat">What format to output the result HEX (uppercase), hex (lowercase) or Base64</param>
         /// <param name="encoding">What encoding to use defauts to UTF-8</param>
         /// <returns>HMAC as string</returns>
-        public static string ToHmacSha384(this byte[] value, string secretKey, HashFormat hashFormat, Encoding encoding)
+        public static string ToHmacSha384(this byte[] value, string secretKey, HashFormat hashFormat, Encoding encoding = null)
         {
             if (value == null)
                 return null;
@@ -57,7 +57,7 @@ namespace dotnet.common.hash
         /// <param name="hashFormat">What format to output the result HEX (uppercase), hex (lowercase) or Base64</param>
         /// <param name="encoding">What encoding to use defauts to UTF-8</param>
         /// <returns>HMAC as string</returns>
-        public static string ToHmacSha256(this byte[] value, string secretKey, HashFormat hashFormat, Encoding encoding)
+        public static string ToHmacSha256(this byte[] value, string secretKey, HashFormat hashFormat, Encoding encoding = null)
         {
             if (value == null)
                 return null;
@@ -79,7 +79,7 @@ namespace dotnet.common.hash
         /// <param name="hashFormat">What format to output the result HEX (uppercase), hex (lowercase) or Base64</param>
         /// <param name="encoding">What encoding to use defauts to UTF-8</param>
         /// <returns>HMAC as string</returns>
-        public static string ToHmacSha1(this byte[] value, string secretKey, HashFormat hashFormat, Encoding encoding)
+        public static string ToHmacSha1(this byte[] value, string secretKey, HashFormat hashFormat, Encoding encoding = null)
         {
             if (value == null)
                 return null;
@@ -101,7 +101,7 @@ namespace dotnet.common.hash
         /// <param name="hashFormat">What format to output the result HEX (uppercase), hex (lowercase) or Base64</param>
         /// <param name="encoding">What encoding to use defauts to UTF-8</param>
         /// <returns>HMAC as string</returns>
-        public static string ToHmacMD5(this byte[] value, string secretKey, HashFormat hashFormat, Encoding encoding)
+        public static string ToHmacMD5(this byte[] value, string secretKey, HashFormat hashFormat, Encoding encoding = null)
         {
             if (value == null)
                 return null;
@@ -123,7 +123,7 @@ namespace dotnet.common.hash
         /// <param name="hashFormat">What format to output the result HEX (uppercase), hex (lowercase) or Base64</param>
         /// <param name="encoding">What encoding to use defauts to UTF-8</param>
         /// <returns>HMAC as string</returns>
-        public static string ToHmacSha512(this string value, string secretKey, HashFormat hashFormat, Encoding encoding)
+        public static string ToHmacSha512(this string value, string secretKey, HashFormat hashFormat, Encoding encoding = null)
         {
             if (encoding == null)
                 encoding = Encoding.UTF8;
@@ -139,7 +139,7 @@ namespace dotnet.common.hash
         /// <param name="hashFormat">What format to output the result HEX (uppercase), hex (lowercase) or Base64</param>
         /// <param name="encoding">What encoding to use defauts to UTF-8</param>
         /// <returns>HMAC as string</returns>
-        public static string ToHmacSha384(this string value, string secretKey, HashFormat hashFormat, Encoding encoding)
+        public static string ToHmacSha384(this string value, string secretKey, HashFormat hashFormat, Encoding encoding = null)
         {
             if (encoding == null)
                 encoding = Encoding.UTF8;
@@ -155,7 +155,7 @@ namespace dotnet.common.hash
         /// <param name="hashFormat">What format to output the result HEX (uppercase), hex (lowercase) or Base64</param>
         /// <param name="encoding">What encoding to use defauts to UTF-8</param>
         /// <returns>HMAC as string</returns>
-        public static string ToHmacSha256(this string value, string secretKey, HashFormat hashFormat, Encoding encoding)
+        public static string ToHmacSha256(this string value, string secretKey, HashFormat hashFormat, Encoding encoding = null)
         {
             if (encoding == null)
                 encoding = Encoding.UTF8;
@@ -171,7 +171,7 @@ namespace dotnet.common.hash
         /// <param name="hashFormat">What format to output the result HEX (uppercase), hex (lowercase) or Base64</param>
         /// <param name="encoding">What encoding to use defauts to UTF-8</param>
         /// <returns>HMAC as string</returns>
-        public static string ToHmacSha1(this string value, string secretKey, HashFormat hashFormat, Encoding encoding)
+        public static string ToHmacSha1(this string value, string secretKey, HashFormat hashFormat, Encoding encoding = null)
         {
             if (encoding == null)
                 encoding = Encoding.UTF8;
@@ -187,7 +187,7 @@ namespace dotnet.common.hash
         /// <param name="hashFormat">What format to output the result HEX (uppercase), hex (lowercase) or Base64</param>
         /// <param name="encoding">What encoding to use defauts to UTF-8</param>
         /// <returns>HMAC as string</returns>
-        public static string ToHmacMD5(this string value, string secretKey, HashFormat hashFormat, Encoding encoding)
+        public static string ToHmacMD5(this string value, string secretKey, HashFormat hashFormat, Encoding encoding = null)
         {
             if (encoding == null)
                 encoding = Encoding.UTF8;

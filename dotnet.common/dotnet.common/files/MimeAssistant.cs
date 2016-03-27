@@ -205,7 +205,7 @@ namespace dotnet.common.files
         /// </summary>
         /// <param name="fileName">Filename or path with extension</param>
         /// <returns>Mimetype of the given filetype</returns>
-        public static string GetMIMEType(string fileName)
+        public static string GetMIMEType(this string fileName)
         {
             if (string.IsNullOrWhiteSpace(fileName))
                 throw new ArgumentNullException("fileName is null or empty");

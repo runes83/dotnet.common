@@ -2,6 +2,9 @@
 
 namespace dotnet.common.date
 {
+    /// <summary>
+    /// DateTime helper methods
+    /// </summary>
     public static class DateExtensions
     {
         /// <summary>

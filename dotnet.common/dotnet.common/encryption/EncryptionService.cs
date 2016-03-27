@@ -14,7 +14,7 @@ namespace dotnet.common.encryption
     /// </summary>
     public class EncryptionService : IEncryption
     {
-        private const int ivSize = 16;
+        private const int IvSize = 16;
         private const int BlockSize = 128;
         private readonly SecureString _secret;
 
@@ -27,6 +27,16 @@ namespace dotnet.common.encryption
         {
             _secret = new SecureString();
             secret.ForEach(x => _secret.AppendChar(x));
+        }
+
+        /// <summary>
+        ///     Key to use when encryption as a base64 encoded string 256 bit
+        ///     Use the GenerateNewSecret method to generate a key.
+        /// </summary>
+        /// <param name="secret">256 bit base64 encoed string as a SecureString</param>
+        public EncryptionService(SecureString secret)
+        {
+            _secret = secret;
         }
 
         /// <summary>
@@ -77,8 +87,8 @@ namespace dotnet.common.encryption
         /// <returns>Unencrypted bytes</returns>
         public byte[] DecryptFile(byte[] fileBytes)
         {
-            var iv = fileBytes.Take(ivSize).ToArray();
-            var dataBytes = fileBytes.Skip(ivSize).ToArray();
+            var iv = fileBytes.Take(IvSize).ToArray();
+            var dataBytes = fileBytes.Skip(IvSize).ToArray();
 
             return Encryptor.Decrypt(new EncryptedData(dataBytes, iv), Convert.FromBase64String(SecretAsString()));
         }
@@ -105,8 +115,12 @@ namespace dotnet.common.encryption
 
             var decryptedData = value.Split('|');
 
-            var result = Encryptor.Decrypt(new EncryptedData(Convert.FromBase64String(decryptedData[0]),
-                Convert.FromBase64String(decryptedData[0])), Convert.FromBase64String(SecretAsString()));
+            var result = Encryptor.Decrypt(
+                new EncryptedData(
+                    Convert.FromBase64String(decryptedData[0]),
+                    Convert.FromBase64String(decryptedData[1]))
+                , Convert.FromBase64String(SecretAsString())
+            );
 
             return Encoding.UTF8.GetString(result);
         }

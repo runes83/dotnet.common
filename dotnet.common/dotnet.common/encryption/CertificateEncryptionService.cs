@@ -13,10 +13,11 @@ namespace dotnet.common.encryption
     ///     with AES256.
     ///     A AES encryption key is generated and encrypted with the certificate and then emebedded in the result along with
     ///     the IV.
+    ///     To decrypt the service need access to the certificates private key
     /// </summary>
     public class CertificateEncryptionService : IEncryption
     {
-        private const int ivSize = 16;
+        private const int IvSize = 16;
         private const int BlockSize = 128;
         private X509Certificate2 certificate;
 
@@ -155,9 +156,9 @@ namespace dotnet.common.encryption
         {
             using (var rsa = certificate.PrivateKey as RSACryptoServiceProvider)
             {
-                var iv = fileBytes.Take(ivSize).ToArray();
-                var key = rsa.Decrypt(fileBytes.Skip(ivSize).Take(256).ToArray(), true);
-                var result = fileBytes.Skip(ivSize + 256).ToArray();
+                var iv = fileBytes.Take(IvSize).ToArray();
+                var key = rsa.Decrypt(fileBytes.Skip(IvSize).Take(256).ToArray(), true);
+                var result = fileBytes.Skip(IvSize + 256).ToArray();
 
                 return Encryptor.Decrypt(new EncryptedData(result, iv), key);
             }
