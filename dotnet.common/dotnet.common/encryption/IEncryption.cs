@@ -2,7 +2,7 @@
 
 namespace dotnet.common.encryption
 {
-    internal interface IEncryption:IDisposable
+    public interface IEncryption:IDisposable
     {
         /// <summary>
         ///     Encrypt the bytes
