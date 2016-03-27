@@ -12,4 +12,5 @@ Tired of writing the same code each tome you start a new project, or going back 
 * Parsing numbers
 * Hash and HMCA (MD5, SHA1, Sha256, Sha284, Sha512)
 * Encryption (Both Certificate and string key based)
+* Reflection (Set, get and list properties on a object)
 * Files
