@@ -5,6 +5,7 @@ using System.Runtime.InteropServices;
 using System.Security;
 using System.Security.Cryptography;
 using System.Text;
+using dotnet.common.misc;
 
 namespace dotnet.common.encryption
 {

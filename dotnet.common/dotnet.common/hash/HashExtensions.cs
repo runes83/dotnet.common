@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Security.Cryptography;
 using System.Text;
+using dotnet.common.misc;
 
 namespace dotnet.common.hash
 {

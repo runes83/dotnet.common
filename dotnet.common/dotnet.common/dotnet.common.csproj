@@ -44,8 +44,9 @@
     <Compile Include="files\MimeAssistant.cs" />
     <Compile Include="hash\HashExtensions.cs" />
     <Compile Include="hash\HmacExtensions.cs" />
-    <Compile Include="MiscExtensions.cs" />
-    <Compile Include="MiscParsingExtensions.cs" />
+    <Compile Include="misc\CommonHelper.cs" />
+    <Compile Include="misc\MiscExtensions.cs" />
+    <Compile Include="misc\MiscParsingExtensions.cs" />
     <Compile Include="numbers\NumberExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="encryption\CertificateEncryptionService.cs" />

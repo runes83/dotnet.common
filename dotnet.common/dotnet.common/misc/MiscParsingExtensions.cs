@@ -1,6 +1,6 @@
 using System;
 
-namespace dotnet.common
+namespace dotnet.common.misc
 {
     public static class MiscParsingExtensions
     {

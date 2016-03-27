@@ -1,59 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Threading;
 
-namespace dotnet.common
+namespace dotnet.common.misc
 {
-    /// <summary>
-    ///     Misc extensions and helper methods
-    /// </summary>
-    public static class MiscExtensions
+    public static class CommonHelper
     {
-        /// <summary>
-        ///     Enables to do a action on elements in a collection
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="enumeration"></param>
-        /// <param name="action"></param>
-        public static void ForEach<T>(this IEnumerable<T> enumeration, Action<T> action)
-        {
-            foreach (var item in enumeration)
-            {
-                action(item);
-            }
-        }
-
-        /// <summary>
-        ///     Enables to do an operation and retry if speficied exception is thrown
-        /// </summary>
-        /// <typeparam name="T">Type of exception to retry for</typeparam>
-        /// <param name="action"></param>
-        /// <param name="retryLimit">How many times to retry</param>
-        /// <param name="sleepMillicsecond">How long delay between each retry</param>
-        public static void Retry<T>(this Action action, int retryLimit = 4, int sleepMillicsecond = 0)
-            where T : Exception
-        {
-            var retry = 0;
-            var success = false;
-            while (!success && retry <= retryLimit)
-            {
-                try
-                {
-                    action();
-                    success = true;
-                }
-                catch (T t)
-                {
-                    if (!success && retry >= retryLimit)
-                        throw t;
-
-                    if (sleepMillicsecond > 0)
-                        Thread.Sleep(sleepMillicsecond);
-                    retry++;
-                }
-            }
-        }
-
         /// <summary>
         ///     Enables to do an operation and retry if speficied exception is thrown
         /// </summary>
@@ -192,6 +143,35 @@ namespace dotnet.common
             return result;
         }
 
-       
+        /// <summary>
+        ///     Enables to do an operation and retry if speficied exception is thrown
+        /// </summary>
+        /// <typeparam name="T">Type of exception to retry for</typeparam>
+        /// <param name="action"></param>
+        /// <param name="retryLimit">How many times to retry</param>
+        /// <param name="sleepMillicsecond">How long delay between each retry</param>
+        public static void Retry<T>(this Action action, int retryLimit = 4, int sleepMillicsecond = 0)
+            where T : Exception
+        {
+            var retry = 0;
+            var success = false;
+            while (!success && retry <= retryLimit)
+            {
+                try
+                {
+                    action();
+                    success = true;
+                }
+                catch (T t)
+                {
+                    if (!success && retry >= retryLimit)
+                        throw t;
+
+                    if (sleepMillicsecond > 0)
+                        Thread.Sleep(sleepMillicsecond);
+                    retry++;
+                }
+            }
+        }
     }
 }
