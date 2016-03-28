@@ -28,6 +28,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.CSharp" />
@@ -45,6 +46,7 @@
     <Compile Include="hash\HashExtensions.cs" />
     <Compile Include="hash\HmacExtensions.cs" />
     <Compile Include="misc\CommonHelper.cs" />
+    <Compile Include="misc\ConfigManagerExtensions.cs" />
     <Compile Include="misc\MiscExtensions.cs" />
     <Compile Include="misc\MiscParsingExtensions.cs" />
     <Compile Include="numbers\NumberExtensions.cs" />

@@ -265,7 +265,6 @@ namespace dotnet.common.hash
             {
                 case HashFormat.BASE64:
                     return Convert.ToBase64String(hashBytes);
-                    break;
                 case HashFormat.hex:
                     return hashBytes.ByteToString("{0:x2}");
 

@@ -29,10 +29,10 @@ namespace dotnet.common.reflection
                         throw new Exception("Property does not exist with name: {0}".FormatWith(propertyName));
                 }
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 if (throwExceptionIfPropertyNotExist)
-                    throw e;
+                    throw;
             }
         }
 
@@ -54,10 +54,10 @@ namespace dotnet.common.reflection
                 if (throwExceptionIfPropertyNotExist)
                     throw new Exception("Property does not exist with name: {0}".FormatWith(propertyName));
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 if (throwExceptionIfPropertyNotExist)
-                    throw e;
+                    throw;
             }
 
             return null;

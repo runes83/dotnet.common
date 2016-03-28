@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Runtime.InteropServices;
+using System.Security;
 using System.Text;
 
 namespace dotnet.common.strings
@@ -126,6 +128,48 @@ namespace dotnet.common.strings
                     throw new Exception("Illegal base64url string!");
             }
             return output.FromBase64String();
+        }
+
+        /// <summary>
+        /// Converts securestring into ordinary string
+        /// </summary>
+        /// <param name="secureString">Secure string object</param>
+        /// <returns>string object with the value from the secure string</returns>
+        public static string ToUnsecureString(this SecureString secureString)
+        {
+            if (secureString == null)
+                throw new ArgumentNullException("secureString");
+
+            IntPtr ptr = System.Runtime.InteropServices.Marshal.SecureStringToBSTR(secureString);
+            try
+            {
+               return System.Runtime.InteropServices.Marshal.PtrToStringBSTR(ptr);
+            }
+            finally
+            {
+                System.Runtime.InteropServices.Marshal.ZeroFreeBSTR(ptr);
+            }
+            
+        }
+        /// <summary>
+        /// Creates a secure string from a string, if the string is null or empty it will return a null object
+        /// </summary>
+        /// <param name="secureString">String value to convert into as SecureString</param>
+        /// <returns>Secure string object, rember to dispose when </returns>
+        public static SecureString ToSecureString(this string secureString)
+        {
+            if (secureString == null || string.IsNullOrWhiteSpace(secureString))
+                throw new ArgumentNullException("secureString");
+
+            unsafe
+            {
+                fixed (char* chars = secureString)
+                {
+                    var secureStringObject = new SecureString(chars, secureString.Length);
+                    secureStringObject.MakeReadOnly();
+                    return secureStringObject;
+                }
+            }
         }
     }
 }

@@ -69,7 +69,7 @@ namespace dotnet.common.serialization
                 streamWriter.Write(Export(includeHeaderLine));
                 streamWriter.Flush();
                 streamWriter.Close();
-            }
+                    }
             return ms;
         }
 
@@ -98,7 +98,7 @@ namespace dotnet.common.serialization
                     {
                         sb.Append(MakeValueCsvFriendly(propertyInfo.GetValue(obj, null))).Append(";");
                     }
-                    catch (Exception e)
+                    catch (Exception)
                     {
                     }
                 }

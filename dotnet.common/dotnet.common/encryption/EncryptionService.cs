@@ -17,7 +17,7 @@ namespace dotnet.common.encryption
     {
         private const int IvSize = 16;
         private const int BlockSize = 128;
-        private readonly SecureString _secret;
+        private  SecureString _secret;
 
         /// <summary>
         ///     Key to use when encryption as a base64 encoded string 256 bit
@@ -45,7 +45,31 @@ namespace dotnet.common.encryption
         /// </summary>
         public void Dispose()
         {
-            _secret.Dispose();
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+        // NOTE: Leave out the finalizer altogether if this class doesn't 
+        // own unmanaged resources itself, but leave the other methods
+        // exactly as they are. 
+        ~EncryptionService()
+        {
+            // Finalizer calls Dispose(false)
+            Dispose(false);
+        }
+        // The bulk of the clean-up code is implemented in Dispose(bool)
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                // free managed resources
+                if (_secret != null)
+                {
+                    _secret.Dispose();
+                    _secret = null;
+                }
+            }
+            // free native resources if there are any.
+            
         }
 
         /// <summary>

@@ -18,16 +18,41 @@ namespace dotnet.common.security
             WITHSPECIALCHARACTERS
         }
 
-        private readonly RNGCryptoServiceProvider Rand;
+        private RNGCryptoServiceProvider Rand;
 
         public RandomStringGenerator()
         {
             Rand = new RNGCryptoServiceProvider();
         }
 
+        // Dispose() calls Dispose(true)
         public void Dispose()
         {
-            Rand.Dispose();
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+        // NOTE: Leave out the finalizer altogether if this class doesn't 
+        // own unmanaged resources itself, but leave the other methods
+        // exactly as they are. 
+        ~RandomStringGenerator()
+        {
+            // Finalizer calls Dispose(false)
+            Dispose(false);
+        }
+        // The bulk of the clean-up code is implemented in Dispose(bool)
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                // free managed resources
+                if (Rand != null)
+                {
+                    Rand.Dispose();
+                    Rand = null;
+                }
+            }
+            // free native resources if there are any.
+           
         }
 
         /// <summary>
