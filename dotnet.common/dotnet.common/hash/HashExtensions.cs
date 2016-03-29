@@ -267,10 +267,10 @@ namespace dotnet.common.hash
                 case ByteEncoding.BASE64:
                     return Convert.ToBase64String(hashBytes);
                 case ByteEncoding.hex:
-                    return hashBytes.ByteToString("{0:x2}");
+                    return hashBytes.BytesToHex().ToLowerInvariant();
 
                 default:
-                    return hashBytes.ByteToString();
+                    return hashBytes.BytesToHex();
             }
         }
 

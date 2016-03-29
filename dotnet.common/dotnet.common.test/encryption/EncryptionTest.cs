@@ -95,7 +95,8 @@ namespace dotnet.common.test.encryption
             {
                 var encryptedBytes = encryptionService.EncryptString(testString,ByteEncoding.HEX);
                 Assert.IsFalse(sha1.Equals(encryptedBytes.ToSha1(ByteEncoding.BASE64)));
-
+                Console.WriteLine(encryptedBytes);
+                Console.WriteLine("HEX length: {0}",encryptedBytes.Length);
                 var decryptedBytes = encryptionService.DecryptString(encryptedBytes,ByteEncoding.HEX);
                 var decryptedSha1 = decryptedBytes.ToSha1(ByteEncoding.BASE64);
 
@@ -103,16 +104,20 @@ namespace dotnet.common.test.encryption
 
                 var encryptedBytes2 = encryptionService.EncryptString(testString, ByteEncoding.hex);
                 Assert.IsFalse(sha1.Equals(encryptedBytes2.ToSha1(ByteEncoding.BASE64)));
+                Console.WriteLine(encryptedBytes2);
+                Console.WriteLine("hex length: {0}", encryptedBytes2.Length);
 
                 var decryptedBytes2 = encryptionService.DecryptString(encryptedBytes2, ByteEncoding.hex);
                 var decryptedSha12 = decryptedBytes2.ToSha1(ByteEncoding.BASE64);
 
                 Assert.AreEqual(sha1, decryptedSha12);
 
-                var encryptedBytes3 = encryptionService.EncryptString(testString, ByteEncoding.hex);
+                var encryptedBytes3 = encryptionService.EncryptString(testString, ByteEncoding.BASE64);
                 Assert.IsFalse(sha1.Equals(encryptedBytes3.ToSha1(ByteEncoding.BASE64)));
+                Console.WriteLine(encryptedBytes3);
+                Console.WriteLine("base64 length: {0}", encryptedBytes3.Length);
 
-                var decryptedBytes3 = encryptionService.DecryptString(encryptedBytes3, ByteEncoding.hex);
+                var decryptedBytes3 = encryptionService.DecryptString(encryptedBytes3, ByteEncoding.BASE64);
                 var decryptedSha13 = decryptedBytes3.ToSha1(ByteEncoding.BASE64);
 
                 Assert.AreEqual(sha1, decryptedSha13);
