@@ -177,10 +177,8 @@ namespace dotnet.common.hash
         {
             if (value == null)
                 return null;
-            using (var sha = new MD5CryptoServiceProvider())
-            {
-                return sha.ComputeHash(value).EncodeHashBytes(hashFormat);
-            }
+            return value.ToMd5().EncodeByteArray(hashFormat);
+
         }
 
         /// <summary>
@@ -193,10 +191,8 @@ namespace dotnet.common.hash
         {
             if (value == null)
                 return null;
-            using (var sha = new SHA1CryptoServiceProvider())
-            {
-                return sha.ComputeHash(value).EncodeHashBytes(hashFormat);
-            }
+            return value.ToSha1().EncodeByteArray(hashFormat);
+
         }
 
         /// <summary>
@@ -209,10 +205,8 @@ namespace dotnet.common.hash
         {
             if (value == null)
                 return null;
-            using (var sha = new SHA256CryptoServiceProvider())
-            {
-                return sha.ComputeHash(value).EncodeHashBytes(hashFormat);
-            }
+            return value.ToSha256().EncodeByteArray(hashFormat);
+
         }
 
         /// <summary>
@@ -225,10 +219,8 @@ namespace dotnet.common.hash
         {
             if (value == null)
                 return null;
-            using (var sha = new SHA384CryptoServiceProvider())
-            {
-                return sha.ComputeHash(value).EncodeHashBytes(hashFormat);
-            }
+
+            return value.ToSha384().EncodeByteArray(hashFormat);
         }
 
         /// <summary>
@@ -241,10 +233,8 @@ namespace dotnet.common.hash
         {
             if (value == null)
                 return null;
-            using (var sha = new SHA512CryptoServiceProvider())
-            {
-                return sha.ComputeHash(value).EncodeHashBytes(hashFormat);
-            }
+            return value.ToSha512().EncodeByteArray(hashFormat);
+
         }
 
         private static string ToShaHash(this string value, HashFormat hashFormat,
@@ -256,11 +246,22 @@ namespace dotnet.common.hash
             if (encoding == null)
                 encoding = Encoding.UTF8;
 
-            return ComputeHash(encoding.GetBytes(value)).EncodeHashBytes(hashFormat);
+            return ComputeHash(encoding.GetBytes(value)).EncodeByteArray(hashFormat);
         }
 
-        internal static string EncodeHashBytes(this byte[] hashBytes, HashFormat hashFormat)
+        /// <summary>
+        /// Encode byte array to string
+        /// </summary>
+        /// <param name="hashBytes">Byte array to encode</param>
+        /// <param name="hashFormat">What format to output the result HEX (uppercase), hex (lowercase) or Base64</param>
+        /// <returns>String encoded byte array</returns>
+        public static string EncodeByteArray(this byte[] hashBytes, HashFormat hashFormat)
         {
+            if (hashBytes == null)
+                return null;
+            if (hashBytes.Length == 0)
+                return string.Empty;
+
             switch (hashFormat)
             {
                 case HashFormat.BASE64:

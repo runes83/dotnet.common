@@ -4,6 +4,7 @@ using System.Linq;
 using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
+using dotnet.common.misc;
 using dotnet.common.strings;
 
 namespace dotnet.common.encryption
@@ -109,7 +110,8 @@ namespace dotnet.common.encryption
                 var key = Convert.FromBase64String(EncryptionService.GenerateNewSecret());
                 var result = Encryptor.Encrypt(fileBytes, key);
 
-                return result.Iv.Concat(rsa.Encrypt(key, true)).Concat(result.Bytes).ToArray();
+                return result.Iv.Combine(rsa.Encrypt(key, true), result.Bytes);
+
             }
         }
 
@@ -156,11 +158,15 @@ namespace dotnet.common.encryption
         {
             using (var rsa = certificate.PrivateKey as RSACryptoServiceProvider)
             {
-                var iv = fileBytes.Take(IvSize).ToArray();
-                var key = rsa.Decrypt(fileBytes.Skip(IvSize).Take(256).ToArray(), true);
-                var result = fileBytes.Skip(IvSize + 256).ToArray();
+                var iv = new byte[IvSize];
+                var key = new byte[256];
+                var dataBytes = new byte[fileBytes.Length-IvSize-256];
 
-                return Encryptor.Decrypt(new EncryptedData(result, iv), key);
+                Buffer.BlockCopy(fileBytes, 0, iv, 0, IvSize);
+                Buffer.BlockCopy(fileBytes, IvSize, key, 0, 256);
+                Buffer.BlockCopy(fileBytes, IvSize+256, dataBytes, 0, fileBytes.Length - IvSize-256);
+
+                return Encryptor.Decrypt(new EncryptedData(dataBytes, iv), rsa.Decrypt(key,true));
             }
         }
 

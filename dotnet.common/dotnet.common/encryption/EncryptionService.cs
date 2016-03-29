@@ -81,7 +81,7 @@ namespace dotnet.common.encryption
         {
             var result = Encryptor.Encrypt(fileBytes, Convert.FromBase64String(SecretAsString()));
 
-            return result.Iv.Concat(result.Bytes).ToArray();
+            return result.Iv.Combine(result.Bytes);
         }
 
         /// <summary>
@@ -112,8 +112,11 @@ namespace dotnet.common.encryption
         /// <returns>Unencrypted bytes</returns>
         public byte[] DecryptFile(byte[] fileBytes)
         {
-            var iv = fileBytes.Take(IvSize).ToArray();
-            var dataBytes = fileBytes.Skip(IvSize).ToArray();
+            var iv = new byte[IvSize];
+            var dataBytes = new byte[fileBytes.Length - IvSize];
+
+            Buffer.BlockCopy(fileBytes, 0, iv, 0, IvSize);
+            Buffer.BlockCopy(fileBytes, IvSize, dataBytes, 0, fileBytes.Length-IvSize);
 
             return Encryptor.Decrypt(new EncryptedData(dataBytes, iv), Convert.FromBase64String(SecretAsString()));
         }

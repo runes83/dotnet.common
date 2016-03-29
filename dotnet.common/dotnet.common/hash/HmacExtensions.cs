@@ -23,7 +23,7 @@ namespace dotnet.common.hash
 
             using (var sha = new HMACSHA512(encoding.GetBytes(secretKey)))
             {
-                return sha.ComputeHash(value).EncodeHashBytes(hashFormat);
+                return sha.ComputeHash(value).EncodeByteArray(hashFormat);
             }
         }
 
@@ -45,7 +45,7 @@ namespace dotnet.common.hash
 
             using (var sha = new HMACSHA384(encoding.GetBytes(secretKey)))
             {
-                return sha.ComputeHash(value).EncodeHashBytes(hashFormat);
+                return sha.ComputeHash(value).EncodeByteArray(hashFormat);
             }
         }
 
@@ -67,7 +67,7 @@ namespace dotnet.common.hash
 
             using (var sha = new HMACSHA256(encoding.GetBytes(secretKey)))
             {
-                return sha.ComputeHash(value).EncodeHashBytes(hashFormat);
+                return sha.ComputeHash(value).EncodeByteArray(hashFormat);
             }
         }
 
@@ -89,7 +89,7 @@ namespace dotnet.common.hash
 
             using (var sha = new HMACSHA1(encoding.GetBytes(secretKey)))
             {
-                return sha.ComputeHash(value).EncodeHashBytes(hashFormat);
+                return sha.ComputeHash(value).EncodeByteArray(hashFormat);
             }
         }
 
@@ -111,7 +111,7 @@ namespace dotnet.common.hash
 
             using (var sha = new HMACMD5(encoding.GetBytes(secretKey)))
             {
-                return sha.ComputeHash(value).EncodeHashBytes(hashFormat);
+                return sha.ComputeHash(value).EncodeByteArray(hashFormat);
             }
         }
 
