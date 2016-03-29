@@ -5,6 +5,7 @@ using System.Runtime.InteropServices;
 using System.Security;
 using System.Security.Cryptography;
 using System.Text;
+using dotnet.common.hash;
 using dotnet.common.misc;
 
 namespace dotnet.common.encryption
@@ -98,11 +99,13 @@ namespace dotnet.common.encryption
         ///     Encryptes string
         /// </summary>
         /// <param name="value">String value to encrypt</param>
-        /// <returns>Encrypted string</returns>
-        public string EncryptString(string value)
+        /// <param name="byteEncoding">What format to output the result HEX (uppercase), hex (lowercase) or Base64</param>
+        /// <returns>Encrypted string encoded with given format default base64</returns>
+        public string EncryptString(string value, ByteEncoding byteEncoding = ByteEncoding.BASE64)
         {
             var result = Encryptor.Encrypt(Encoding.UTF8.GetBytes(value), Convert.FromBase64String(SecretAsString()));
-            return string.Format("{0}|{1}", Convert.ToBase64String(result.Bytes), Convert.ToBase64String(result.Iv));
+            return result.Iv.Combine(result.Bytes).EncodeByteArray(byteEncoding);
+            
         }
 
         /// <summary>
@@ -135,21 +138,25 @@ namespace dotnet.common.encryption
         ///     Decrypt string encrypted with the EncryptString method
         /// </summary>
         /// <param name="value">String to be decrypted</param>
+        /// <param name="byteEncoding">What format to output the result HEX (uppercase), hex (lowercase) or Base64</param>
         /// <returns>Unencrypted string</returns>
-        public string DecryptString(string value)
+        public string DecryptString(string value, ByteEncoding byteEncoding = ByteEncoding.BASE64)
         {
-            if (!value.Contains("|"))
-                throw new FormatException("value must contain the | character");
+            var stringBytes = byteEncoding==ByteEncoding.BASE64
+                   ? Convert.FromBase64String(value)
+                   :value.HexToBytes();
+            var iv = new byte[IvSize];
+            var dataBytes = new byte[stringBytes.Length - IvSize];
 
-            var decryptedData = value.Split('|');
+            Buffer.BlockCopy(stringBytes, 0, iv, 0, IvSize);
+            Buffer.BlockCopy(stringBytes, IvSize, dataBytes, 0, stringBytes.Length - IvSize);
 
             var result = Encryptor.Decrypt(
-                new EncryptedData(
-                    Convert.FromBase64String(decryptedData[0]),
-                    Convert.FromBase64String(decryptedData[1]))
+                new EncryptedData(dataBytes,iv)
                 , Convert.FromBase64String(SecretAsString())
             );
-
+        
+            
             return Encoding.UTF8.GetString(result);
         }
 
@@ -159,13 +166,18 @@ namespace dotnet.common.encryption
         /// <returns>256 bit base64 encoded string</returns>
         public static string GenerateNewSecret()
         {
+           return Convert.ToBase64String(GenerateNewSecretAsBytes());
+        }
+
+        public static byte[] GenerateNewSecretAsBytes()
+        {
             using (var aesManaged = new AesManaged())
             {
                 aesManaged.BlockSize = BlockSize;
                 aesManaged.KeySize = 256;
                 aesManaged.GenerateKey();
 
-                return Convert.ToBase64String(aesManaged.Key);
+                return aesManaged.Key;
             }
         }
 

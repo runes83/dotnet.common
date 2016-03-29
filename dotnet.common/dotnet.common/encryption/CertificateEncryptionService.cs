@@ -4,6 +4,7 @@ using System.Linq;
 using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
+using dotnet.common.hash;
 using dotnet.common.misc;
 using dotnet.common.strings;
 
@@ -129,23 +130,22 @@ namespace dotnet.common.encryption
         ///     Encryptes string
         /// </summary>
         /// <param name="value">String value to encrypt</param>
-        /// <returns>Encrypted string</returns>
-        public string EncryptString(string value)
+        /// <param name="byteEncoding">What format to output the result HEX (uppercase), hex (lowercase) or Base64</param>
+        /// <returns>Encrypted string encoded with given format default base64</returns>
+        public string EncryptString(string value,ByteEncoding byteEncoding=ByteEncoding.BASE64)
         {
             using (var rsa = certificate.PublicKey.Key as RSACryptoServiceProvider)
             {
                 var maxLength = (rsa.KeySize/8) - 42;
                 var bytesToEncrypt = Encoding.UTF8.GetBytes(value);
-                if (bytesToEncrypt.Length > maxLength)
-                    return Convert.ToBase64String(rsa.Encrypt(bytesToEncrypt, true));
+                if (bytesToEncrypt.Length < maxLength)
+                    return string.Format("R_{0}", Convert.ToBase64String(rsa.Encrypt(bytesToEncrypt, true)));
 
-                var key = Convert.FromBase64String(EncryptionService.GenerateNewSecret());
+                var key = EncryptionService.GenerateNewSecretAsBytes();
                 var result = Encryptor.Encrypt(bytesToEncrypt, key);
 
-                return string.Format("{0}|{1}|{2}"
-                    , Convert.ToBase64String(result.Iv)
-                    , Convert.ToBase64String(rsa.Encrypt(key, true))
-                    , Convert.ToBase64String(result.Bytes));
+                return result.Iv.Combine(rsa.Encrypt(key, true), result.Bytes).EncodeByteArray(byteEncoding);
+
             }
         }
 
@@ -185,23 +185,33 @@ namespace dotnet.common.encryption
         /// </summary>
         /// <param name="value">String to be decrypted</param>
         /// <returns>Unencrypted string</returns>
-        public string DecryptString(string value)
+        public string DecryptString(string value, ByteEncoding byteEncoding = ByteEncoding.BASE64)
         {
-            if (value.Contains('|'))
+            if (value.StartsWith("R_"))
             {
                 using (var rsa = certificate.PrivateKey as RSACryptoServiceProvider)
                 {
-                    return Encoding.UTF8.GetString(rsa.Decrypt(Convert.FromBase64String(value), true));
+                    value = value.Substring(2);
+                    var encryptedStringBytes = byteEncoding == ByteEncoding.BASE64
+                       ? Convert.FromBase64String(value)
+                       : value.HexToBytes();
+                    return  Encoding.UTF8.GetString(rsa.Decrypt(encryptedStringBytes , true));
                 }
             }
             using (var rsa = certificate.PrivateKey as RSACryptoServiceProvider)
             {
-                var encryptedContent = value.Split('|');
-                var iv = Convert.FromBase64String(encryptedContent[0]);
-                var key = rsa.Decrypt(Convert.FromBase64String(encryptedContent[1]), true);
-                var dataBytes = Convert.FromBase64String(encryptedContent[2]);
+                var encryptedStringBytes = byteEncoding == ByteEncoding.BASE64
+                   ? Convert.FromBase64String(value)
+                   : value.HexToBytes(); 
+                var iv = new byte[IvSize];
+                var key = new byte[256];
+                var dataBytes = new byte[encryptedStringBytes.Length - IvSize - 256];
 
-                return Encoding.UTF8.GetString(Encryptor.Decrypt(new EncryptedData(dataBytes, iv), key));
+                Buffer.BlockCopy(encryptedStringBytes, 0, iv, 0, IvSize);
+                Buffer.BlockCopy(encryptedStringBytes, IvSize, key, 0, 256);
+                Buffer.BlockCopy(encryptedStringBytes, IvSize + 256, dataBytes, 0, encryptedStringBytes.Length - IvSize - 256);
+                
+                return Encoding.UTF8.GetString(Encryptor.Decrypt(new EncryptedData(dataBytes, iv), rsa.Decrypt(key,true)));
             }
         }
     }

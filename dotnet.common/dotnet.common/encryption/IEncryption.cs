@@ -1,4 +1,5 @@
 ﻿using System;
+using dotnet.common.hash;
 
 namespace dotnet.common.encryption
 {
@@ -23,7 +24,7 @@ namespace dotnet.common.encryption
         /// </summary>
         /// <param name="value">String to be encrypted</param>
         /// <returns>Encrypted string with the IV embedded</returns>
-        string EncryptString(string value);
+        string EncryptString(string value, ByteEncoding byteEncoding = ByteEncoding.BASE64);
 
         /// <summary>
         ///     Decrypt filebytes encrypted with the encryptfile method
@@ -44,6 +45,6 @@ namespace dotnet.common.encryption
         /// </summary>
         /// <param name="value">Bytes to be decrypted</param>
         /// <returns>Encrypted string with the IV embedded</returns>
-        string DecryptString(string value);
+        string DecryptString(string value, ByteEncoding byteEncoding = ByteEncoding.BASE64);
     }
 }

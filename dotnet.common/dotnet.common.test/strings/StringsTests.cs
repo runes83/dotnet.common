@@ -12,7 +12,7 @@ namespace dotnet.common.test.strings
     [TestFixture]
     public class StringsTests
     {
-        private string truncateTestString =
+        public static string truncateTestString =
             "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam tristique lectus elit, dapibus vestibulum lectus accumsan id. Aenean malesuada velit ac mi convallis volutpat. Aenean quis purus ac orci viverra ultricies. Integer fermentum pharetra iaculis. Fusce metus lectus, aliquam interdum luctus non, tempus at erat. Proin tristique erat a dolor posuere, sit amet interdum tellus tempus. Sed vel sagittis tellus. Nullam laoreet magna leo, a vulputate est semper ut. In eu eros eu sem imperdiet ultrices ac at magna. Aliquam molestie aliquam dignissim. Vestibulum lobortis, nisl eget eleifend porttitor, nisi lacus malesuada quam, non malesuada libero erat nec erat. Integer consectetur ultricies arcu. Mauris vitae lacinia elit. Maecenas id odio eu metus dapibus luctus quis in elit. In hac habitasse platea dictumst.";
         [Test]
         public void Test_that_format_with_returns_the_same_as_string_dot_format()

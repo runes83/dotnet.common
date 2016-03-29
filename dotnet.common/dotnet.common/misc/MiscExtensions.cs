@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Configuration;
 using System.Linq;
-using System.Threading;
 
 namespace dotnet.common.misc
 {
@@ -56,6 +54,23 @@ namespace dotnet.common.misc
             }
             return ret;
         }
+
+
+        public static byte[] HexToBytes(this string hexString)
+        {
+            byte[] b = new byte[hexString.Length / 2];
+            char c;
+            for (int i = 0; i < hexString.Length / 2; i++)
+            {
+                c = hexString[i * 2];
+                b[i] = (byte)((c < 0x40 ? c - 0x30 : (c < 0x47 ? c - 0x37 : c - 0x57)) << 4);
+                c = hexString[i * 2 + 1];
+                b[i] += (byte)(c < 0x40 ? c - 0x30 : (c < 0x47 ? c - 0x37 : c - 0x57));
+            }
+
+            return b;
+        }
+
 
     }
 }
