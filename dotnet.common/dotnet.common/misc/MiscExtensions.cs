@@ -23,6 +23,12 @@ namespace dotnet.common.misc
             }
         }
 
+        /// <summary>
+        /// Combines 2 byte arrays into one
+        /// </summary>
+        /// <param name="first">First byte arry to add</param>
+        /// <param name="second">Second byte array to add</param>
+        /// <returns>Combined byte array</returns>
         public static byte[] Combine(this byte[] first, byte[] second)
         {
             byte[] ret = new byte[first.Length + second.Length];
@@ -30,7 +36,13 @@ namespace dotnet.common.misc
             Buffer.BlockCopy(second, 0, ret, first.Length, second.Length);
             return ret;
         }
-
+        /// <summary>
+        /// Combines 3 byte arrays into one
+        /// </summary>
+        /// <param name="first">First byte arry to add</param>
+        /// <param name="second">Second byte array to add</param>
+        /// <param name="third">Third byte array to add</param>
+        /// <returns>Combined byte array</returns>
         public static byte[] Combine(this byte[] first, byte[] second, byte[] third)
         {
             byte[] ret = new byte[first.Length + second.Length + third.Length];
@@ -41,6 +53,12 @@ namespace dotnet.common.misc
             return ret;
         }
 
+        /// <summary>
+        /// Combines 4 or more byte arrays into one
+        /// </summary>
+        /// <param name="first">First byte array</param>
+        /// <param name="arrays">2+ byte arrays</param>
+        /// <returns>Combined byte array</returns>
         public static byte[] Combine(this byte[] first,params byte[][] arrays)
         {
             byte[] ret = new byte[first.Length + arrays.Sum(x => x.Length)];
@@ -55,12 +73,16 @@ namespace dotnet.common.misc
             return ret;
         }
 
-
+        /// <summary>
+        /// Decodes a hex string to byte array
+        /// </summary>
+        /// <param name="hexString">String in hex cod</param>
+        /// <returns>Byte array</returns>
         public static byte[] HexToBytes(this string hexString)
         {
             byte[] b = new byte[hexString.Length / 2];
             char c;
-            for (int i = 0; i < hexString.Length / 2; i++)
+            for (var i = 0; i < hexString.Length / 2; i++)
             {
                 c = hexString[i * 2];
                 b[i] = (byte)((c < 0x40 ? c - 0x30 : (c < 0x47 ? c - 0x37 : c - 0x57)) << 4);
