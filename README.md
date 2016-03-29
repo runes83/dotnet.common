@@ -18,4 +18,5 @@ Tired of writing the same code each tome you start a new project, or going back 
 * Random string generator (cryptographic strong string)
 * Serialization (object to=> csv, xml)
 * Flow control doitnotnull etc.
+* Byte arrays (Combine, To hex and from hex)
 * Misc helper methods
