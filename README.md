@@ -1,7 +1,7 @@
 # dotnet.common
 Common extensions and helper methods for .NET developers
 
-Tired of writing the same code each tome you start a new project, or going back on old projects and copying methods and code to avoid writing them all over again. This collection of extensions is created for this purpose. All the most common tasks as string convertion, security ect.
+Tired of writing the same code each time you start a new project, or going back on old projects and copying methods and code to avoid writing them all over again. This collection of extensions is created for this purpose. All the most common tasks as string convertion, security ect.
 
 #### No external dependencies
 
