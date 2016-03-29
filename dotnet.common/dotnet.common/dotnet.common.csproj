@@ -20,6 +20,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -43,10 +44,12 @@
     <Compile Include="enums\EnumExtensions.cs" />
     <Compile Include="files\FilesExtensions.cs" />
     <Compile Include="files\MimeAssistant.cs" />
+    <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="hash\HashExtensions.cs" />
     <Compile Include="hash\HmacExtensions.cs" />
     <Compile Include="misc\CommonHelper.cs" />
     <Compile Include="misc\ConfigManagerExtensions.cs" />
+    <Compile Include="misc\FlowControlExtensions.cs" />
     <Compile Include="misc\MiscExtensions.cs" />
     <Compile Include="misc\MiscParsingExtensions.cs" />
     <Compile Include="numbers\NumberExtensions.cs" />

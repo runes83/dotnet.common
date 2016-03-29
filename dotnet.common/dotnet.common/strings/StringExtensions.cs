@@ -18,8 +18,8 @@ namespace dotnet.common.strings
         /// <returns></returns>
         public static string FormatWith(this string format, params object[] args)
         {
-            if (format == null)
-                throw new ArgumentNullException("format");
+            if (string.IsNullOrWhiteSpace(format))
+                return null;
 
             return string.Format(format, args);
         }
@@ -32,8 +32,8 @@ namespace dotnet.common.strings
         /// <returns></returns>
         public static string FormatWith(this string format, IFormatProvider provider, params object[] args)
         {
-            if (format == null)
-                throw new ArgumentNullException("format");
+            if (string.IsNullOrWhiteSpace(format))
+                return null;
 
             return string.Format(provider, format, args);
         }
@@ -57,16 +57,20 @@ namespace dotnet.common.strings
         /// <param name="source">String to truncate</param>
         /// <param name="length">Number of characters</param>
         /// <param name="endwithDots">End the truncated string with ...</param>
-        /// <returns></returns>
+        /// <returns>Truncated string</returns>
         public static string Truncate(this string source, int length, bool endwithDots = false)
         {
-            if (endwithDots)
+            if (string.IsNullOrWhiteSpace(source))
+                return null;
+
+            if (source.Length > length)
             {
-                if (source.Length > length)
-                    return string.Format("{0}...", source.Truncate(length - 3, true));
-                return source;
+                return endwithDots
+                    ? string.Format("{0}...", source.Substring(0, length - 3))
+                    : source.Substring(0, length);
             }
-            return source.Truncate(length);
+
+            return source;
         }
 
         /// <summary>
@@ -97,11 +101,10 @@ namespace dotnet.common.strings
         /// <returns></returns>
         public static string Base64UrlEncode(this string value)
         {
-            var output = value.ToBase64String();
-            output = output.Split('=')[0]; // Remove any trailing '='s
-            output = output.Replace('+', '-'); // 62nd char of encoding
-            output = output.Replace('/', '_'); // 63rd char of encoding
-            return output;
+            return value.ToBase64String()
+                .Split('=')[0] // Remove any trailing '='s
+                .Replace('+', '-') // 62nd char of encoding
+                .Replace('/', '_'); // 63rd char of encoding
         }
 
         /// <summary>
@@ -109,29 +112,30 @@ namespace dotnet.common.strings
         /// </summary>
         /// <param name="value"></param>
         /// <returns></returns>
-        public static string Base64UrlDecode(this string input)
+        public static string Base64UrlDecode(this string value)
         {
-            var output = input;
-            output = output.Replace('-', '+'); // 62nd char of encoding
-            output = output.Replace('_', '/'); // 63rd char of encoding
-            switch (output.Length%4) // Pad with trailing '='s
+            
+            value = value.Replace('-', '+') // 62nd char of encoding
+                         .Replace('_', '/'); // 63rd char of encoding
+
+            switch (value.Length%4) // Pad with trailing '='s
             {
                 case 0:
                     break; // No pad chars in this case
                 case 2:
-                    output += "==";
+                    value += "==";
                     break; // Two pad chars
                 case 3:
-                    output += "=";
+                    value += "=";
                     break; // One pad char
                 default:
                     throw new Exception("Illegal base64url string!");
             }
-            return output.FromBase64String();
+            return value.FromBase64String();
         }
 
         /// <summary>
-        /// Converts securestring into ordinary string
+        ///     Converts securestring into ordinary string
         /// </summary>
         /// <param name="secureString">Secure string object</param>
         /// <returns>string object with the value from the secure string</returns>
@@ -140,19 +144,19 @@ namespace dotnet.common.strings
             if (secureString == null)
                 throw new ArgumentNullException("secureString");
 
-            IntPtr ptr = System.Runtime.InteropServices.Marshal.SecureStringToBSTR(secureString);
+            var ptr = Marshal.SecureStringToBSTR(secureString);
             try
             {
-               return System.Runtime.InteropServices.Marshal.PtrToStringBSTR(ptr);
+                return Marshal.PtrToStringBSTR(ptr);
             }
             finally
             {
-                System.Runtime.InteropServices.Marshal.ZeroFreeBSTR(ptr);
+                Marshal.ZeroFreeBSTR(ptr);
             }
-            
         }
+
         /// <summary>
-        /// Creates a secure string from a string, if the string is null or empty it will return a null object
+        ///     Creates a secure string from a string, if the string is null or empty it will return a null object
         /// </summary>
         /// <param name="secureString">String value to convert into as SecureString</param>
         /// <returns>Secure string object, rember to dispose when </returns>

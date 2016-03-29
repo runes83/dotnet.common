@@ -5,7 +5,7 @@ using System.Text;
 namespace dotnet.common.security
 {
     /// <summary>
-    /// Generates a cryptographic strong string
+    ///     Generates a cryptographic strong string
     /// </summary>
     public class RandomStringGenerator : IDisposable
     {
@@ -31,6 +31,7 @@ namespace dotnet.common.security
             Dispose(true);
             GC.SuppressFinalize(this);
         }
+
         // NOTE: Leave out the finalizer altogether if this class doesn't 
         // own unmanaged resources itself, but leave the other methods
         // exactly as they are. 
@@ -39,6 +40,7 @@ namespace dotnet.common.security
             // Finalizer calls Dispose(false)
             Dispose(false);
         }
+
         // The bulk of the clean-up code is implemented in Dispose(bool)
         protected virtual void Dispose(bool disposing)
         {
@@ -52,11 +54,10 @@ namespace dotnet.common.security
                 }
             }
             // free native resources if there are any.
-           
         }
 
         /// <summary>
-        /// Generates a cryptographic string of given length with given characters
+        ///     Generates a cryptographic string of given length with given characters
         /// </summary>
         /// <param name="length">Length of string to generate</param>
         /// <param name="characters">What chars should the string contain</param>
@@ -69,9 +70,8 @@ namespace dotnet.common.security
             }
         }
 
-
         /// <summary>
-        /// Generates a cryptographic string of given length with given characters
+        ///     Generates a cryptographic string of given length with given characters
         /// </summary>
         /// <param name="length">Length of string to generate</param>
         /// <param name="chars">What chars should the string contain</param>
@@ -90,7 +90,7 @@ namespace dotnet.common.security
         }
 
         /// <summary>
-        /// Generates a cryptographic string of given length with given characters
+        ///     Generates a cryptographic string of given length with given characters
         /// </summary>
         /// <param name="length">Length of string to generate</param>
         /// <param name="characters">What chars should the string contain</param>

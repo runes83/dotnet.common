@@ -61,6 +61,7 @@ namespace dotnet.common.serialization
             return Export(true);
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2202:Do not dispose objects multiple times")]
         public Stream ExportStream(bool includeHeaderLine)
         {
             var ms = new MemoryStream();
@@ -69,7 +70,7 @@ namespace dotnet.common.serialization
                 streamWriter.Write(Export(includeHeaderLine));
                 streamWriter.Flush();
                 streamWriter.Close();
-                    }
+            }
             return ms;
         }
 

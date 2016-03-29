@@ -2,6 +2,7 @@
 using System.IO;
 using System.IO.Compression;
 using System.Text;
+using dotnet.common.misc;
 
 namespace dotnet.common.compression
 {
@@ -31,24 +32,24 @@ namespace dotnet.common.compression
         public static byte[] CompressWithGZIP(this byte[] value)
         {
             if (value == null)
-                return value;
+                return null;
 
-            using (var memoryStream = new MemoryStream())
+            MemoryStream compressedStream = null;
+            try
             {
-                using (var gZipStream = new GZipStream(memoryStream, CompressionMode.Compress, true))
+                compressedStream = new MemoryStream();
+
+                using (var zipStream = new GZipStream(compressedStream, CompressionMode.Compress))
                 {
-                    gZipStream.Write(value, 0, value.Length);
+                    zipStream.Write(value, 0, value.Length);
+                    zipStream.Close();
+
+                    return compressedStream.ToArray();
                 }
-
-                memoryStream.Position = 0;
-
-                var compressedData = new byte[memoryStream.Length];
-                memoryStream.Read(compressedData, 0, compressedData.Length);
-
-                var gZipBuffer = new byte[compressedData.Length + 4];
-                Buffer.BlockCopy(compressedData, 0, gZipBuffer, 4, compressedData.Length);
-                Buffer.BlockCopy(BitConverter.GetBytes(value.Length), 0, gZipBuffer, 0, 4);
-                return gZipBuffer;
+            }
+            finally
+            {
+                compressedStream.DoIfNotNull(x => x.Dispose());
             }
         }
 
@@ -72,21 +73,31 @@ namespace dotnet.common.compression
         public static byte[] DecompressWithGZIP(this byte[] compressedBytes)
         {
             if (compressedBytes == null)
-                return compressedBytes;
-            using (var memoryStream = new MemoryStream())
+                return null;
+
+            MemoryStream compressedStream = null;
+            try
             {
-                var dataLength = BitConverter.ToInt32(compressedBytes, 0);
-                memoryStream.Write(compressedBytes, 4, compressedBytes.Length - 4);
+                compressedStream = new MemoryStream(compressedBytes);
 
-                var buffer = new byte[dataLength];
-
-                memoryStream.Position = 0;
-                using (var gZipStream = new GZipStream(memoryStream, CompressionMode.Decompress))
+                GZipStream zipStream = null;
+                try
                 {
-                    gZipStream.Read(buffer, 0, buffer.Length);
+                    zipStream = new GZipStream(compressedStream, CompressionMode.Decompress);
+                    using (var resultStream = new MemoryStream())
+                    {
+                        zipStream.CopyTo(resultStream);
+                        return resultStream.ToArray();
+                    }
                 }
-
-                return buffer;
+                finally
+                {
+                    zipStream.DoIfNotNull(x => x.Dispose());
+                }
+            }
+            finally
+            {
+                compressedStream.DoIfNotNull(x => x.Dispose());
             }
         }
     }

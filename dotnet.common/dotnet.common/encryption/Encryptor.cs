@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Security.Cryptography;
+using dotnet.common.misc;
 
 namespace dotnet.common.encryption
 {
@@ -21,15 +22,34 @@ namespace dotnet.common.encryption
                 aes.GenerateIV();
                 aes.Key = key;
 
-                using (var encryptor = aes.CreateEncryptor())
-                using (var destination = new MemoryStream())
-                using (var cryptoStream = new CryptoStream(destination, encryptor, CryptoStreamMode.Write))
+                ICryptoTransform encryptor = null;
+                try
                 {
-                    cryptoStream.Write(bytes, 0, bytes.Length);
-                    cryptoStream.FlushFinalBlock();
+                    encryptor = aes.CreateEncryptor();
 
-                    return new EncryptedData(destination.ToArray(), aes.IV);
+                    MemoryStream destination=null;
+                    try
+                    {
+                        destination = new MemoryStream();
+                        using (var cryptoStream = new CryptoStream(destination, encryptor, CryptoStreamMode.Write))
+                        {
+                            cryptoStream.Write(bytes, 0, bytes.Length);
+                            cryptoStream.FlushFinalBlock();
+
+                            return new EncryptedData(destination.ToArray(), aes.IV);
+                        }
+                    }
+                    finally
+                    {
+                        destination.DoIfNotNull(x=>x.Dispose());
+                     }
+                    
                 }
+                finally
+                {
+                    encryptor.DoIfNotNull(x => x.Dispose());
+                }
+                
             }
         }
 
@@ -41,21 +61,38 @@ namespace dotnet.common.encryption
             var iv = encryptedData.Iv;
             var bytes = encryptedData.Bytes;
 
-            using (var rijndael = new AesManaged())
+            using (var aesManaged = new AesManaged())
             {
-                rijndael.BlockSize = BlockSize;
+                aesManaged.BlockSize = BlockSize;
 
-                rijndael.IV = iv;
-                rijndael.Key = key;
+                aesManaged.IV = iv;
+                aesManaged.Key = key;
 
-                using (var decryptor = rijndael.CreateDecryptor())
-                using (var destination = new MemoryStream())
-                using (var cryptoStream = new CryptoStream(destination, decryptor, CryptoStreamMode.Write))
+                ICryptoTransform decryptor = null;
+                try
                 {
-                    cryptoStream.Write(bytes, 0, bytes.Length);
-                    cryptoStream.FlushFinalBlock();
+                    decryptor = aesManaged.CreateDecryptor();
 
-                    return destination.ToArray();
+                    MemoryStream destination = null;
+                    try
+                    {
+                        destination = new MemoryStream();
+                        using (var cryptoStream = new CryptoStream(destination, decryptor, CryptoStreamMode.Write))
+                        {
+                            cryptoStream.Write(bytes, 0, bytes.Length);
+                            cryptoStream.FlushFinalBlock();
+
+                            return destination.ToArray();
+                        }
+                    } finally
+                    {
+                        destination.DoIfNotNull(x => x.Dispose());
+                    }
+
+                }
+                finally
+                {
+                    decryptor.DoIfNotNull(x => x.Dispose());
                 }
             }
         }
