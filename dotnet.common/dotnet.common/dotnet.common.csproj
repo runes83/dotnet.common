@@ -41,7 +41,10 @@
   <ItemGroup>
     <Compile Include="compression\Compression.cs" />
     <Compile Include="date\DateExtensions.cs" />
+    <Compile Include="encryption\CertificateBaseService.cs" />
+    <Compile Include="encryption\CertificateSignService.cs" />
     <Compile Include="enums\EnumExtensions.cs" />
+    <Compile Include="exceptions\PrivateKeyNotAvailableException.cs" />
     <Compile Include="files\FilesExtensions.cs" />
     <Compile Include="files\MimeAssistant.cs" />
     <Compile Include="GlobalSuppressions.cs" />

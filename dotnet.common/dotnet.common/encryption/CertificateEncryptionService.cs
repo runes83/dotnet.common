@@ -1,12 +1,9 @@
 using System;
 using System.IO;
-using System.Linq;
-using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using dotnet.common.hash;
 using dotnet.common.misc;
-using dotnet.common.strings;
 
 namespace dotnet.common.encryption
 {
@@ -17,19 +14,17 @@ namespace dotnet.common.encryption
     ///     the IV.
     ///     To decrypt the service need access to the certificates private key
     /// </summary>
-    public class CertificateEncryptionService : IEncryption
+    public class CertificateEncryptionService : CertificateBaseService, IEncryption
     {
         private const int IvSize = 16;
         private const int BlockSize = 128;
-        private X509Certificate2 certificate;
 
         /// <summary>
         ///     Initialize the encryptionservice
         /// </summary>
         /// <param name="certificate">The certificate to encrypt with as a X509Certificate2 object</param>
-        public CertificateEncryptionService(X509Certificate2 certificate)
+        public CertificateEncryptionService(X509Certificate2 certificate) : base(certificate)
         {
-            this.certificate = certificate;
         }
 
         /// <summary>
@@ -37,13 +32,8 @@ namespace dotnet.common.encryption
         /// </summary>
         /// <param name="certificatePath">Path to the certificate to use</param>
         /// <param name="password">Password to the ceriticate to use</param>
-        public CertificateEncryptionService(string certificatePath, string password)
+        public CertificateEncryptionService(string certificatePath, string password) : base(certificatePath, password)
         {
-            if (!File.Exists(certificatePath))
-                throw new ArgumentNullException("certificatePath is not a valid path");
-
-            certificate = new X509Certificate2(File.ReadAllBytes(certificatePath), password,
-                X509KeyStorageFlags.MachineKeySet);
         }
 
         /// <summary>
@@ -51,9 +41,9 @@ namespace dotnet.common.encryption
         /// </summary>
         /// <param name="certificateDataBytes">Certificate to use as bytes</param>
         /// <param name="password">Password to the ceriticate to use</param>
-        public CertificateEncryptionService(byte[] certificateDataBytes, string password)
+        public CertificateEncryptionService(byte[] certificateDataBytes, string password) :
+            base(certificateDataBytes, password)
         {
-            certificate = new X509Certificate2(certificateDataBytes, password, X509KeyStorageFlags.MachineKeySet);
         }
 
         /// <summary>
@@ -64,39 +54,8 @@ namespace dotnet.common.encryption
         /// <param name="storeLocation">The certificate store location to use default CurrentUser</param>
         public CertificateEncryptionService(string thumbprint, StoreName storeName = StoreName.My,
             StoreLocation storeLocation = StoreLocation.CurrentUser)
+            : base(thumbprint, storeName, storeLocation)
         {
-            var store = new X509Store(storeName, storeLocation);
-            try
-            {
-                store.Open(OpenFlags.ReadOnly);
-
-                // Place all certificates in an X509Certificate2Collection object.
-                // If using a certificate with a trusted root you do not need to FindByTimeValid, instead:
-                // currentCerts.Find(X509FindType.FindBySubjectDistinguishedName, certName, true);
-                var currentCerts = store.Certificates.Find(X509FindType.FindByThumbprint, thumbprint.ToUpperInvariant(),
-                    false);
-
-                if (currentCerts.Count == 0)
-                    currentCerts = store.Certificates.Find(X509FindType.FindByThumbprint, thumbprint.ToLowerInvariant(),
-                        false);
-
-                if (currentCerts.Count == 0)
-                    throw new ApplicationException("Cannot find certificate with thumprint: {0}".FormatWith(thumbprint));
-                // Return the first certificate in the collection, has the right name and is current.
-                certificate = currentCerts[0];
-            }
-            finally
-            {
-                store.Close();
-            }
-        }
-
-        /// <summary>
-        ///     Disposes internal resources
-        /// </summary>
-        public void Dispose()
-        {
-            certificate = null;
         }
 
         /// <summary>
@@ -106,14 +65,10 @@ namespace dotnet.common.encryption
         /// <returns>Encrypted bytes</returns>
         public byte[] EncryptFile(byte[] fileBytes)
         {
-            using (var rsa = certificate.PublicKey.Key as RSACryptoServiceProvider)
-            {
-                var key = Convert.FromBase64String(EncryptionService.GenerateNewSecret());
-                var result = Encryptor.Encrypt(fileBytes, key);
+            var key = Convert.FromBase64String(EncryptionService.GenerateNewSecret());
+            var result = Encryptor.Encrypt(fileBytes, key);
 
-                return result.Iv.Combine(rsa.Encrypt(key, true), result.Bytes);
-
-            }
+            return result.Iv.Combine(publicKey.Encrypt(key, true), result.Bytes);
         }
 
         /// <summary>
@@ -132,21 +87,17 @@ namespace dotnet.common.encryption
         /// <param name="value">String value to encrypt</param>
         /// <param name="byteEncoding">What format to output the result HEX (uppercase), hex (lowercase) or Base64</param>
         /// <returns>Encrypted string encoded with given format default base64</returns>
-        public string EncryptString(string value,ByteEncoding byteEncoding=ByteEncoding.BASE64)
+        public string EncryptString(string value, ByteEncoding byteEncoding = ByteEncoding.BASE64)
         {
-            using (var rsa = certificate.PublicKey.Key as RSACryptoServiceProvider)
-            {
-                var maxLength = (rsa.KeySize/8) - 42;
-                var bytesToEncrypt = Encoding.UTF8.GetBytes(value);
-                if (bytesToEncrypt.Length < maxLength)
-                    return string.Format("R_{0}", Convert.ToBase64String(rsa.Encrypt(bytesToEncrypt, true)));
+            var maxLength = (publicKey.KeySize/8) - 42;
+            var bytesToEncrypt = Encoding.UTF8.GetBytes(value);
+            if (bytesToEncrypt.Length < maxLength)
+                return string.Format("R_{0}", Convert.ToBase64String(publicKey.Encrypt(bytesToEncrypt, true)));
 
-                var key = EncryptionService.GenerateNewSecretAsBytes();
-                var result = Encryptor.Encrypt(bytesToEncrypt, key);
+            var key = EncryptionService.GenerateNewSecretAsBytes();
+            var result = Encryptor.Encrypt(bytesToEncrypt, key);
 
-                return result.Iv.Combine(rsa.Encrypt(key, true), result.Bytes).EncodeByteArray(byteEncoding);
-
-            }
+            return result.Iv.Combine(publicKey.Encrypt(key, true), result.Bytes).EncodeByteArray(byteEncoding);
         }
 
         /// <summary>
@@ -156,18 +107,15 @@ namespace dotnet.common.encryption
         /// <returns>Unencrypted bytes</returns>
         public byte[] DecryptFile(byte[] fileBytes)
         {
-            using (var rsa = certificate.PrivateKey as RSACryptoServiceProvider)
-            {
-                var iv = new byte[IvSize];
-                var key = new byte[256];
-                var dataBytes = new byte[fileBytes.Length-IvSize-256];
+            var iv = new byte[IvSize];
+            var key = new byte[256];
+            var dataBytes = new byte[fileBytes.Length - IvSize - 256];
 
-                Buffer.BlockCopy(fileBytes, 0, iv, 0, IvSize);
-                Buffer.BlockCopy(fileBytes, IvSize, key, 0, 256);
-                Buffer.BlockCopy(fileBytes, IvSize+256, dataBytes, 0, fileBytes.Length - IvSize-256);
+            Buffer.BlockCopy(fileBytes, 0, iv, 0, IvSize);
+            Buffer.BlockCopy(fileBytes, IvSize, key, 0, 256);
+            Buffer.BlockCopy(fileBytes, IvSize + 256, dataBytes, 0, fileBytes.Length - IvSize - 256);
 
-                return Encryptor.Decrypt(new EncryptedData(dataBytes, iv), rsa.Decrypt(key,true));
-            }
+            return Encryptor.Decrypt(new EncryptedData(dataBytes, iv), privateKey.Decrypt(key, true));
         }
 
         /// <summary>
@@ -189,29 +137,29 @@ namespace dotnet.common.encryption
         {
             if (value.StartsWith("R_"))
             {
-                using (var rsa = certificate.PrivateKey as RSACryptoServiceProvider)
-                {
-                    value = value.Substring(2);
-                    var encryptedStringBytes = byteEncoding == ByteEncoding.BASE64
-                       ? Convert.FromBase64String(value)
-                       : value.HexToBytes();
-                    return  Encoding.UTF8.GetString(rsa.Decrypt(encryptedStringBytes , true));
-                }
+                value = value.Substring(2);
+                var encryptedStringBytes = byteEncoding == ByteEncoding.BASE64
+                    ? Convert.FromBase64String(value)
+                    : value.HexToBytes();
+                return Encoding.UTF8.GetString(privateKey.Decrypt(encryptedStringBytes, true));
             }
-            using (var rsa = certificate.PrivateKey as RSACryptoServiceProvider)
+            else
             {
                 var encryptedStringBytes = byteEncoding == ByteEncoding.BASE64
-                   ? Convert.FromBase64String(value)
-                   : value.HexToBytes(); 
+                    ? Convert.FromBase64String(value)
+                    : value.HexToBytes();
                 var iv = new byte[IvSize];
                 var key = new byte[256];
                 var dataBytes = new byte[encryptedStringBytes.Length - IvSize - 256];
 
                 Buffer.BlockCopy(encryptedStringBytes, 0, iv, 0, IvSize);
                 Buffer.BlockCopy(encryptedStringBytes, IvSize, key, 0, 256);
-                Buffer.BlockCopy(encryptedStringBytes, IvSize + 256, dataBytes, 0, encryptedStringBytes.Length - IvSize - 256);
-                
-                return Encoding.UTF8.GetString(Encryptor.Decrypt(new EncryptedData(dataBytes, iv), rsa.Decrypt(key,true)));
+                Buffer.BlockCopy(encryptedStringBytes, IvSize + 256, dataBytes, 0,
+                    encryptedStringBytes.Length - IvSize - 256);
+
+                return
+                    Encoding.UTF8.GetString(Encryptor.Decrypt(new EncryptedData(dataBytes, iv),
+                        privateKey.Decrypt(key, true)));
             }
         }
     }

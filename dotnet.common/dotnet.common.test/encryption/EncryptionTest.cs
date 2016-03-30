@@ -20,7 +20,7 @@ namespace dotnet.common.test.encryption
         public void Setup()
         {
             secret = EncryptionService.GenerateNewSecret();
-            
+
         }
 
         [SetUp]
@@ -43,8 +43,8 @@ namespace dotnet.common.test.encryption
                 var decryptedBytes = encryptionService.DecryptFile(encryptedBytes);
                 var decryptedSha1 = decryptedBytes.ToSha1(ByteEncoding.BASE64);
 
-                Assert.AreEqual(sha1,decryptedSha1);
-            }         
+                Assert.AreEqual(sha1, decryptedSha1);
+            }
         }
 
 
@@ -88,16 +88,16 @@ namespace dotnet.common.test.encryption
         [Test]
         public void TestEncryptWithSecretAndDecryptShouldBeTheSameStringLongString()
         {
-            var testString =StringsTests.truncateTestString;
+            var testString = StringsTests.truncateTestString;
             var sha1 = testString.ToSha1(ByteEncoding.BASE64);
 
             using (var encryptionService = new EncryptionService(secret))
             {
-                var encryptedBytes = encryptionService.EncryptString(testString,ByteEncoding.HEX);
+                var encryptedBytes = encryptionService.EncryptString(testString, ByteEncoding.HEX);
                 Assert.IsFalse(sha1.Equals(encryptedBytes.ToSha1(ByteEncoding.BASE64)));
                 Console.WriteLine(encryptedBytes);
-                Console.WriteLine("HEX length: {0}",encryptedBytes.Length);
-                var decryptedBytes = encryptionService.DecryptString(encryptedBytes,ByteEncoding.HEX);
+                Console.WriteLine("HEX length: {0}", encryptedBytes.Length);
+                var decryptedBytes = encryptionService.DecryptString(encryptedBytes, ByteEncoding.HEX);
                 var decryptedSha1 = decryptedBytes.ToSha1(ByteEncoding.BASE64);
 
                 Assert.AreEqual(sha1, decryptedSha1);
@@ -171,13 +171,12 @@ namespace dotnet.common.test.encryption
                     rijndael.GenerateIV();
                     rijndael.GenerateKey();
                     rijndael.KeySize = 256;
-                    Console.WriteLine("{0} length: {1}",Convert.ToBase64String(rijndael.IV), rijndael.IV.Length);
+                    Console.WriteLine("{0} length: {1}", Convert.ToBase64String(rijndael.IV), rijndael.IV.Length);
 
                     Console.WriteLine("{0} length: {1}", Convert.ToBase64String(rijndael.Key), rijndael.Key.Length);
 
                 }
             }
         }
-
     }
 }
